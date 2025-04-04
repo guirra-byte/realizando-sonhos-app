@@ -1,7 +1,6 @@
+![image (11)](https://github.com/user-attachments/assets/d2befbfd-c60d-4d21-8ba1-6ce47533e736)
 
 # 🧪 Desafio Técnico - Desenvolvedor Next.js  
-
-![image (11)](https://github.com/user-attachments/assets/d2befbfd-c60d-4d21-8ba1-6ce47533e736)
 
 ## 📚 Visão Geral
 
@@ -58,11 +57,12 @@ Você deverá implementar e/ou completar as seguintes funcionalidades:
    ```bash
    git clone https://github.com/guirra-byte/realizando-sonhos-app.git
    cd realizando-sonhos
+   ```
 
 ### 2. Instale as dependências
 
 ```bash
-npm install
+npm --force install
 ```
 
 ### 3. Configure as variáveis de ambiente
@@ -100,12 +100,22 @@ Se quiser ir além, você pode implementar:
 
 Crie um repositório **privado** (com acesso compartilhado) no GitHub e envie o link para o revisor.
 
+## 👀 Atenção
+
+Este desafio técnico pode ser um dos desafios ou o único desafio prático que você enfrentará no processo seletivo. Ele foi desenvolvido para avaliar suas habilidades com Next.js, React, TypeScript e Supabase, dentro de um contexto real de projeto.
+
+A proposta é que você interaja com funcionalidades já existentes e complemente o sistema, focando principalmente no módulo de turmas: criação, edição, deleção, adição de alunos e lista de presença.
+
+Após a conclusão do desafio, será agendada uma reunião de revisão com a equipe técnica, onde você poderá apresentar suas decisões, explicar suas implementações e também tirar dúvidas.
+
+⚠️ Lembre-se: o banco de dados utilizado neste desafio é o ambiente de produção, usado por educadores voluntários. Cuidado ao fazer alterações nos dados reais.
+
+Caso tenha qualquer dúvida durante o desafio, sinta-se à vontade para entrar em contato.
+
 ## 💙 Sobre o Projeto Realizando Sonhos
 
 Um projeto social dedicado a transformar a vida de crianças e adolescentes por meio da educação e acolhimento.  
 Seu código fará parte de uma ferramenta usada por educadores voluntários no dia a dia.
-
----
 
 Se tiver dúvidas, fique à vontade para abrir uma *Issue* ou entrar em contato com a equipe de suporte do desafio.
 
