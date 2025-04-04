@@ -1,6 +1,7 @@
+
 # 🧪 Desafio Técnico - Desenvolvedor Next.js  
 
-**Projeto: Realizando Sonhos - Sistema de Gerenciamento de Alunos e Turmas**
+![image (11)](https://github.com/user-attachments/assets/d2befbfd-c60d-4d21-8ba1-6ce47533e736)
 
 ## 📚 Visão Geral
 
