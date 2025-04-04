@@ -16,8 +16,6 @@ Também está incluída a estrutura para a **lista de chamada** e o **histórico
 
 - Se você está vendo este repositório você também tem acesso ao **v0** do Projeto (para saber como a interface deverá se parecer e funcionar) e ao **Supabase DB**.
 
----
-
 ## 🎯 Objetivo do Desafio
 
 Você deverá implementar e/ou completar as seguintes funcionalidades:
@@ -40,8 +38,6 @@ Você deverá implementar e/ou completar as seguintes funcionalidades:
 - Marcar presença de alunos em datas específicas
 - Armazenar histórico de presença por aluno e turma
 
----
-
 ## 🧱 Stack Utilizada
 
 - **Next.js** (App Router)
@@ -51,8 +47,6 @@ Você deverá implementar e/ou completar as seguintes funcionalidades:
 - **Shadcn UI** (componentes)
 - **PostgreSQL** (via Supabase)
 - **Prisma ORM**
-
----
 
 ## 🚀 Como começar
 
@@ -93,21 +87,15 @@ npm run dev
 - Uso correto do Supabase (CRUD de turmas, relacionamento com alunos)  
 - UX simples e funcional para uso em um projeto social  
 
----
-
 ## 📦 Extras (Opcional)
 
 Se quiser ir além, você pode implementar:
 
 - Confirmação antes de deletar turma ou aluno  
 
----
-
 ## 📩 Entrega
 
 Crie um repositório **privado** (com acesso compartilhado) no GitHub e envie o link para o revisor.
-
----
 
 ## 💙 Sobre o Projeto Realizando Sonhos
 
