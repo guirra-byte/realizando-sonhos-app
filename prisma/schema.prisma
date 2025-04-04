@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id                  Int                @id @default(autoincrement())
+  name                String             @unique
+  birthDate           String
+  additionalInfos     String?
+  schoolYear          String
+  shift               String
+  guardian            String
+  guardianCPF         String
+  guardianPhoneNumber String
+  parents             Parent[]           @relation("ParentToStudent")
+  attendances         AttendanceRecord[]
+
+  class   Class?  @relation(fields: [classId], references: [id])
+  classId String?
+
+  @@map("students")
+}
+
+model Class {
+  id          String  @id
+  name        String
+  schoolYear  String
+  ageRange    Int[]
+  description String?
+
+  students Student[]
+}
+
+model AttendanceRecord {
+  id              String    @id
+  date            DateTime  @default(now())
+  presentStudents Student[]
+}
+
+model Parent {
+  id          String     @id
+  phoneNumber String
+  type        ParentType
+  isGuardian  Boolean    @default(false)
+  guardianCPF String
+  name        String     @unique
+  Payment     Payment[]
+  children    Student[]  @relation("ParentToStudent")
+
+  @@map("parents")
+}
+
+model Payment {
+  id        String        @id
+  amount    Int
+  monthTag  String
+  status    PaymentStatus @default(UNPAID)
+  ownerId   String
+  studentId String
+  owner     Parent        @relation(fields: [ownerId], references: [id])
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+enum ParentType {
+  MOTHER
+  FATHER
+}
