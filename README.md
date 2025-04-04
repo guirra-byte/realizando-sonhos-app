@@ -10,11 +10,13 @@ O sistema já está parcialmente implementado em **Next.js (App Router)**. Seu d
 
 ### 📁 Diretório `/components/turmas`
 
-Dentro do diretório `/components/turmas` você encontrará os componentes já criados para o gerenciamento de turmas (tais componentes podem conter erros).  
-Você deverá completar e integrar as funcionalidades de **criar, editar, deletar e atualizar turmas**, além de **adicionar alunos às turmas**.  
+Dentro do diretório `/components/turmas` você encontrará os componentes já criados para o gerenciamento de turmas (tais componentes podem conter erros).
+
+Você deverá completar e integrar as funcionalidades de **criar, editar, deletar e atualizar turmas**, além de **adicionar alunos às turmas**.
+
 Também está incluída a estrutura para a **lista de chamada** e o **histórico de presença dos alunos**.
 
-- Se você está vendo este repositório você também tem acesso ao **v0** do Projeto (para saber como a interface deverá se parecer e funcionar) e ao **Supabase DB**.
+Se você está vendo este repositório você também tem acesso ao **v0** do Projeto (para saber como a interface deverá se parecer e funcionar) e ao **Supabase DB**.
 
 ## 🎯 Objetivo do Desafio
 
