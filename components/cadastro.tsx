@@ -40,7 +40,6 @@ export default function Cadastro() {
 
   // Estado do formulário de aluno
   const [student, setStudent] = useState<Student>({
-    id: 0,
     name: "",
     birthDate: "",
     guardian: "",
@@ -89,7 +88,6 @@ export default function Cadastro() {
     addStudent({ ...student });
     // Limpar formulário
     setStudent({
-      id: 0,
       name: "",
       birthDate: "",
       guardian: "",
@@ -120,216 +118,222 @@ export default function Cadastro() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar />
 
-      {/* Main content */}
-      <div className="flex-1 p-4 md:p-8 pt-16 md:pt-8">
-        <div className="space-y-8">
-          <div className="flex items-center">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">Cadastros</h2>
-              <p className="text-muted-foreground">
-                Cadastre novos alunos e responsáveis no sistema
-              </p>
+      <main className="flex-1 overflow-y-auto">
+        <div className="flex-1 p-4 md:p-8 pt-16 md:pt-8">
+          <div className="space-y-8">
+            <div className="flex items-center">
+              <div>
+                <h2 className="text-3xl font-bold tracking-tight text-[#31A872]">
+                  Cadastros
+                </h2>
+                <p className="text-muted-foreground">
+                  Cadastre novos alunos e responsáveis no sistema
+                </p>
+              </div>
             </div>
-          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Cadastro de Aluno</CardTitle>
-              <CardDescription>
-                Preencha os dados do aluno para cadastrá-lo no sistema
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <form className="space-y-6" onSubmit={handleStudentSubmit}>
-                {/* Dados pessoais */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Dados Pessoais</h3>
+            <Card>
+              <CardHeader>
+                <CardTitle>Cadastro de Aluno</CardTitle>
+                <CardDescription>
+                  Preencha os dados do aluno para cadastrá-lo no sistema
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <form className="space-y-6" onSubmit={handleStudentSubmit}>
+                  {/* Dados pessoais */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Dados Pessoais</h3>
 
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="nome">Nome Completo*</Label>
-                      <Input
-                        id="nome"
-                        placeholder="Nome completo do aluno"
-                        required
-                        value={student.name}
-                        onChange={(e) =>
-                          setStudent({ ...student, name: e.target.value })
-                        }
-                      />
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label htmlFor="nome">Nome Completo*</Label>
+                        <Input
+                          id="nome"
+                          placeholder="Nome completo do aluno"
+                          required
+                          value={student.name}
+                          onChange={(e) =>
+                            setStudent({ ...student, name: e.target.value })
+                          }
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="data-nascimento">
+                          Data de Nascimento*
+                        </Label>
+                        <Input
+                          id="data-nascimento"
+                          type="date"
+                          required
+                          value={student.birthDate}
+                          onChange={(e) =>
+                            setStudent({
+                              ...student,
+                              birthDate: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian">Nome do Responsável*</Label>
+                        <Input
+                          id="guardian"
+                          placeholder="Nome Completo do Responsável"
+                          value={student.guardian}
+                          onChange={(e) =>
+                            setStudent({
+                              ...student,
+                              guardian: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="cpf">CPF do Responsável*</Label>
+                        <Input
+                          id="cpf"
+                          placeholder="000.000.000-00"
+                          value={student.guardianCPF}
+                          onChange={(e) =>
+                            setStudent({
+                              ...student,
+                              guardianCPF: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="guardian">
+                          Telefone do Responsável*
+                        </Label>
+                        <Input
+                          id="guardian"
+                          placeholder="(00) 00000-0000"
+                          type="tel"
+                          value={student.guardianPhoneNumber}
+                          onChange={(e) =>
+                            setStudent({
+                              ...student,
+                              guardianPhoneNumber: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="data-nascimento">
-                        Data de Nascimento*
+                      <Label>Turno*</Label>
+                      <RadioGroup
+                        value={student.shift}
+                        onValueChange={(value) =>
+                          setStudent({ ...student, shift: value })
+                        }
+                        className="flex gap-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="manha" id="manha" />
+                          <Label htmlFor="MANHA">Manhã</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="tarde" id="tarde" />
+                          <Label htmlFor="TARDE">Tarde</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="serie">Série*</Label>
+                      <Select
+                        value={student.schoolYear}
+                        onValueChange={(value) =>
+                          setStudent({ ...student, schoolYear: value })
+                        }
+                        required
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a série" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {classes.length > 0 &&
+                            classes.map((_class, index) => {
+                              return (
+                                <SelectItem key={index} value={_class}>
+                                  {_class}
+                                </SelectItem>
+                              );
+                            })}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="additionalInfos">
+                        Informações Adicionais
                       </Label>
-                      <Input
-                        id="data-nascimento"
-                        type="date"
+                      <Textarea
+                        id="additionalInfos"
+                        placeholder="Descreva aqui informações adicionais"
+                        value={student.additionalInfos}
+                        onChange={(e) =>
+                          setStudent({
+                            ...student,
+                            additionalInfos: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Endereço */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Endereço</h3>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="endereco-completo">
+                        Endereço Completo*
+                      </Label>
+                      <Textarea
+                        id="endereco-completo"
+                        placeholder="Digite o endereço completo (rua, número, bairro, cidade, estado, CEP)"
                         required
-                        value={student.birthDate}
-                        onChange={(e) =>
-                          setStudent({
-                            ...student,
-                            birthDate: e.target.value,
-                          })
-                        }
+                        value={studentHomeLocation}
+                        onChange={(e) => setStudentHomeLocation(e.target.value)}
                       />
                     </div>
                   </div>
 
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <div className="space-y-2">
-                      <Label htmlFor="guardian">Nome do Responsável*</Label>
-                      <Input
-                        id="guardian"
-                        placeholder="Nome Completo do Responsável"
-                        value={student.guardian}
-                        onChange={(e) =>
-                          setStudent({
-                            ...student,
-                            guardian: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="cpf">CPF do Responsável*</Label>
-                      <Input
-                        id="cpf"
-                        placeholder="000.000.000-00"
-                        value={student.guardianCPF}
-                        onChange={(e) =>
-                          setStudent({
-                            ...student,
-                            guardianCPF: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="guardian">Telefone do Responsável*</Label>
-                      <Input
-                        id="guardian"
-                        placeholder="(00) 00000-0000"
-                        type="tel"
-                        value={student.guardianPhoneNumber}
-                        onChange={(e) =>
-                          setStudent({
-                            ...student,
-                            guardianPhoneNumber: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Turno*</Label>
-                    <RadioGroup
-                      value={student.shift}
-                      onValueChange={(value) =>
-                        setStudent({ ...student, shift: value })
-                      }
-                      className="flex gap-4"
+                  <div className="flex justify-end gap-4">
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={() => router.push("/")}
+                      className="py-2 px-4 rounded-lg"
                     >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="manha" id="manha" />
-                        <Label htmlFor="MANHA">Manhã</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="tarde" id="tarde" />
-                        <Label htmlFor="TARDE">Tarde</Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="serie">Série*</Label>
-                    <Select
-                      value={student.schoolYear}
-                      onValueChange={(value) =>
-                        setStudent({ ...student, schoolYear: value })
-                      }
-                      required
+                      Cancelar
+                    </Button>
+                    <Button
+                      className="bg-[#31A872] text-white py-2 px-4 rounded-lg"
+                      type="submit"
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione a série" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {classes.length > 0 &&
-                          classes.map((_class, index) => {
-                            return (
-                              <SelectItem key={index} value={_class}>
-                                {_class}
-                              </SelectItem>
-                            );
-                          })}
-                      </SelectContent>
-                    </Select>
+                      Cadastrar Aluno
+                    </Button>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="additionalInfos">
-                      Informações Adicionais
-                    </Label>
-                    <Textarea
-                      id="additionalInfos"
-                      placeholder="Descreva aqui informações adicionais"
-                      value={student.additionalInfos}
-                      onChange={(e) =>
-                        setStudent({
-                          ...student,
-                          additionalInfos: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-
-                {/* Endereço */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">Endereço</h3>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="endereco-completo">
-                      Endereço Completo*
-                    </Label>
-                    <Textarea
-                      id="endereco-completo"
-                      placeholder="Digite o endereço completo (rua, número, bairro, cidade, estado, CEP)"
-                      required
-                      value={studentHomeLocation}
-                      onChange={(e) => setStudentHomeLocation(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-4">
-                  <Button
-                    variant="outline"
-                    type="button"
-                    onClick={() => router.push("/")}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    className="bg-[#056bbd] hover:bg-[#045a9f] text-white py-2 px-4 rounded"
-                    type="submit"
-                  >
-                    Cadastrar Aluno
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
