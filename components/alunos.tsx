@@ -65,7 +65,6 @@ export default function AlunosPage({ user }: UserProps) {
   const [isInfosModalOpen, setIsInfosModalOpen] = useState(false);
   const [infosModalData, setInfosModalData] = useState<Student>();
 
-  const handleCloseInfosModal = () => setIsInfosModalOpen(!isInfosModalOpen);
   const handleInfosModal = (_parameter: Student) => {
     const student = students.find(
       (student) => _parameter.name === student.name
