@@ -8,8 +8,8 @@ datasource db {
 }
 
 model Student {
-  id                  Int                @id @default(autoincrement())
-  name                String             @unique
+  id                  Int     @id @default(autoincrement())
+  name                String  @unique
   birthDate           String
   additionalInfos     String?
   schoolYear          String
@@ -17,8 +17,9 @@ model Student {
   guardian            String
   guardianCPF         String
   guardianPhoneNumber String
-  parents             Parent[]           @relation("ParentToStudent")
-  attendances         AttendanceRecord[]
+
+  parents     Parent[]           @relation("ParentToStudent")
+  attendances AttendanceRecord[]
 
   class   Class?  @relation(fields: [classId], references: [id])
   classId String?
@@ -27,19 +28,30 @@ model Student {
 }
 
 model Class {
-  id          String  @id
+  id          String  @id @default(uuid())
   name        String
-  schoolYear  String
-  ageRange    Int[]
+  minAge      Int
+  maxAge      Int
   description String?
 
-  students Student[]
+  students         Student[]
+  AttendanceRecord AttendanceRecord[]
+
+  @@map("class")
 }
 
 model AttendanceRecord {
-  id              String    @id
-  date            DateTime  @default(now())
-  presentStudents Student[]
+  id        String    @id
+  date      DateTime  @default(now())
+  arrived   Boolean   @default(false)
+  arrivedAt DateTime?
+
+  Class     Class?   @relation(fields: [classId], references: [id])
+  classId   String?
+  Student   Student? @relation(fields: [studentId], references: [id])
+  studentId Int?
+
+  @@map("attendance_record")
 }
 
 model Parent {
@@ -49,8 +61,9 @@ model Parent {
   isGuardian  Boolean    @default(false)
   guardianCPF String
   name        String     @unique
-  Payment     Payment[]
-  children    Student[]  @relation("ParentToStudent")
+
+  Payment  Payment[]
+  children Student[] @relation("ParentToStudent")
 
   @@map("parents")
 }
