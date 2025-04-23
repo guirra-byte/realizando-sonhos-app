@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent, useEffect, ChangeEvent } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import fs from "fs";
@@ -30,11 +30,16 @@ import { toast } from "@/components/ui/use-toast";
 import { Student, useCadastro } from "@/lib/context";
 import { Sidebar } from "@/components/sidebar";
 import { getSchoolYear } from "@/utils/get-school-year";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "./ui/calendar";
+import { ptBR } from "date-fns/locale/pt-BR";
 export default function Cadastro() {
   const router = useRouter();
 
   const [classes, setClasses] = useState<string[]>([]);
   const [studentHomeLocation, setStudentHomeLocation] = useState("");
+  const [birthDate, setBirthDate] = useState<Date>();
 
   // Estado do formulário de aluno
   const [student, setStudent] = useState<Student>({
@@ -127,14 +132,15 @@ export default function Cadastro() {
     toast({
       title: `✅ Seja Bem-Vindo ${student.name.split(" ")[0]}!`,
       description: "Aluno cadastrado com sucesso!",
-      style: {// Verde
+      style: {
+        // Verde
         color: "#000", // Texto branco
         borderRadius: "8px", // Bordas arredondadas
         padding: "16px", // Padding para melhor espaçamento
         fontSize: "16px", // Tamanho de fonte agradável
         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Sombra suave
       }, // Ícone de sucesso
-      duration: 4000, // Duração do toast
+      duration: 7000, // Duração do toast
     });
 
     // Redirecionar para a lista de alunos
@@ -172,7 +178,7 @@ export default function Cadastro() {
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium">Dados Pessoais</h3>
 
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2 items-center justify-center">
                       <div className="space-y-2">
                         <Label htmlFor="nome">Nome Completo*</Label>
                         <Input
@@ -187,21 +193,47 @@ export default function Cadastro() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="data-nascimento">
+                        <label
+                          htmlFor="data-nascimento"
+                          className="text-sm font-medium"
+                        >
                           Data de Nascimento*
-                        </Label>
-                        <Input
-                          id="data-nascimento"
-                          type="date"
-                          required
-                          value={student.birthDate}
-                          onChange={(e) =>
-                            setStudent({
-                              ...student,
-                              birthDate: e.target.value,
-                            })
-                          }
-                        />
+                        </label>
+
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-start text-left font-normal text-muted-foreground"
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {birthDate ? (
+                                format(birthDate, 'dd/MM/yyyy', { locale: ptBR })
+                              ) : (
+                                <span>Selecionar data</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0">
+                            <Calendar
+                              mode="single"
+                              locale={ptBR}
+                              id="data-nascimento"
+                              selected={birthDate}
+                              onSelect={(e) => {
+                                if (e) {
+                                  setBirthDate(e);
+                                  setStudent((prev) => ({
+                                    ...prev,
+                                    birthDate: format(e, 'dd/MM/yyyy'), // ou outro formato que precisar
+                                  }));
+                                }
+                              }}
+                              initialFocus
+                              required
+                            />
+                          </PopoverContent>
+                        </Popover>
                       </div>
                     </div>
 
@@ -212,6 +244,7 @@ export default function Cadastro() {
                           id="guardian"
                           placeholder="Nome Completo do Responsável"
                           value={student.guardian}
+                          required
                           onChange={(e) =>
                             setStudent({
                               ...student,
@@ -226,6 +259,7 @@ export default function Cadastro() {
                         <Input
                           id="cpf"
                           placeholder="000.000.000-00"
+                          required
                           value={student.guardianCPF}
                           onChange={handleCpfChange}
                         />
@@ -238,6 +272,7 @@ export default function Cadastro() {
                         <Input
                           id="guardian"
                           placeholder="(00) 00000-0000"
+                          required
                           type="tel"
                           value={student.guardianPhoneNumber}
                           onChange={handlePhoneChange}
@@ -249,6 +284,7 @@ export default function Cadastro() {
                       <Label>Turno*</Label>
                       <RadioGroup
                         value={student.shift}
+                        required
                         onValueChange={(value) =>
                           setStudent({ ...student, shift: value })
                         }
@@ -269,10 +305,10 @@ export default function Cadastro() {
                       <Label htmlFor="serie">Série*</Label>
                       <Select
                         value={student.schoolYear}
+                        required
                         onValueChange={(value) =>
                           setStudent({ ...student, schoolYear: value })
                         }
-                        required
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Selecione a série" />
