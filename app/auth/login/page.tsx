@@ -17,10 +17,9 @@ import { login } from "@/app/actions";
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const handleLogin = async () => {
     setLoading(true);
-    
+
     try {
       await login();
     } catch (error: any) {
