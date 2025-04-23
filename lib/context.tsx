@@ -1,9 +1,10 @@
 "use client";
 
-import { ClassData } from "@/components/turmas/chamada-system";
+import { Class } from "@/components/turmas/class-management";
 import { formatCPF, formatName } from "@/utils/format-fns";
 import { getSchoolYear } from "@/utils/get-school-year";
 import { getShift } from "@/utils/get-shift";
+import { Class as DbClass } from "@prisma/client";
 import {
   createContext,
   useContext,
@@ -12,23 +13,18 @@ import {
   type ReactNode,
 } from "react";
 
-// Definindo os tipos para alunos e responsáveis
-export type Aluno = {
+export type AttendanceRecord = {
+  date: string;
+  presentStudentsNames: string[];
+};
+
+export type ClassData = {
   id: string;
-  nome: string;
-  dataNascimento: string;
-  cpf?: string;
-  idade: number;
-  turno: "manha" | "tarde";
-  serie: string;
-  alergias?: string;
-  cep: string;
-  logradouro: string;
-  bairro: string;
-  cidade: string;
-  uf: string;
-  enderecoCompleto: string;
-  dataCadastro: string;
+  name: string;
+  description: string;
+  students: Student[];
+  ageRange?: [number, number];
+  attendanceRecords: AttendanceRecord[];
 };
 
 export type Student = {
@@ -55,6 +51,8 @@ export type Responsavel = {
 type CadastroContextType = {
   students: Student[];
   addStudent: (student: Student) => void;
+  addClass: (_class: Class) => void;
+  classes: DbClass[];
 };
 
 // Criando o contexto
@@ -64,13 +62,28 @@ const CadastroContext = createContext<CadastroContextType | undefined>(
 
 // Provider Component
 export function CadastroProvider({ children }: { children: ReactNode }) {
-  const [classes, setClasses] = useState<ClassData[]>([]);
+  const [classes, setClasses] = useState<DbClass[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
 
   // Carregar dados do localStorage ao iniciar
   useEffect(() => {
     let isMounted = true;
 
+    const fetchClassData = async () => {
+      try {
+        const response = await fetch("/api/turmas", { method: "GET" });
+        if (!response.ok)
+          throw new Error(`Error fetching data: ${response.status}`);
+
+        const loadData = (await response.json()) as DbClass[];
+        if (isMounted) {
+          localStorage.setItem("classes", JSON.stringify(loadData));
+          setClasses(loadData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
     const fetchStudentsData = async () => {
       try {
         const response = await fetch("/api/alunos", { method: "GET" });
@@ -90,6 +103,10 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     const storageStudents = localStorage.getItem("students");
     if (!storageStudents) fetchStudentsData();
     else setStudents(JSON.parse(storageStudents) as Student[]);
+
+    const storageClasses = localStorage.getItem("classes");
+    if (!storageClasses) fetchClassData();
+    else setClasses(JSON.parse(storageClasses) as DbClass[]);
 
     return () => {
       isMounted = false;
@@ -111,9 +128,9 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     };
 
     setStudents((prev) => [tmp, ...prev]);
-    localStorage.removeItem("students")
-    localStorage.setItem("students", JSON.stringify(students))
-    
+    localStorage.removeItem("students");
+    localStorage.setItem("students", JSON.stringify(students));
+
     async function createStudent() {
       await fetch("/api/alunos", {
         method: "POST",
@@ -124,8 +141,24 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     createStudent();
   };
 
+  const addClass = (_class: DbClass) => {
+    localStorage.removeItem("classes");
+    localStorage.setItem("classes", JSON.stringify(_class));
+
+    async function createClass() {
+      await fetch("/api/turmas", {
+        method: "POST",
+        body: JSON.stringify(_class),
+      });
+    }
+
+    createClass();
+  };
+
   return (
-    <CadastroContext.Provider value={{ students, addStudent }}>
+    <CadastroContext.Provider
+      value={{ students, addStudent, addClass, classes }}
+    >
       {children}
     </CadastroContext.Provider>
   );
