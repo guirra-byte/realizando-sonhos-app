@@ -1,15 +1,17 @@
-import type React from "react"
-import { Inter, Poppins } from "next/font/google"
-import "./globals.css"
-import { CadastroProvider } from "@/lib/context"
-import { Toaster } from "@/components/ui/toaster"
+import type React from "react";
+import { Inter, Poppins } from "next/font/google";
+import "./globals.css";
+import { CadastroProvider } from "@/lib/context";
+import { Toaster } from "@/components/ui/toaster";
 
-const inter = Poppins({ weight: ["400", "600", "800"], subsets: ["latin"] })
+import "./globals.css";
+import { Sidebar } from "@/components/sidebar";
+const inter = Poppins({ weight: ["400", "600", "800"], subsets: ["latin"] });
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="pt-BR">
@@ -20,13 +22,9 @@ export default function RootLayout({
         </CadastroProvider>
       </body>
     </html>
-  )
+  );
 }
 
-
-
-import './globals.css'
-
 export const metadata = {
-      generator: 'v0.dev'
-    };
+  generator: "v0.dev",
+};
