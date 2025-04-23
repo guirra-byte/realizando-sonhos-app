@@ -1,6 +1,8 @@
-import Cadastro from "@/components/cadastro"
+import Cadastro from "@/components/cadastro";
+import { auth } from "@/lib/auth";
 
-export default function CadastroPage() {
-  return <Cadastro />
+export default async function CadastroPage() {
+  const session = await auth();
+  if (!session?.user) return null;
+  return <Cadastro />;
 }
-
