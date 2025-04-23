@@ -1,6 +1,4 @@
 "use client";
-
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,48 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
-import { LockKeyhole, Mail } from "lucide-react";
+import { ChromeIcon } from "lucide-react";
+import { signIn } from "@/lib/auth";
+import { login } from "@/app/actions";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     setLoading(true);
-    setError(null);
-
-    if (!supabase) {
-      setError(
-        "Supabase client not initialized. Please check your environment variables."
-      );
-      setLoading(false);
-      return;
-    }
-
+    
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      if (data?.user) {
-        // Redirect to dashboard or protected page
-        router.push("/alunos");
-      }
+      await login();
     } catch (error: any) {
       setError(error.message || "Failed to sign in");
     } finally {
@@ -82,8 +53,8 @@ export default function Login() {
               Entre com suas credenciais para acessar o sistema
             </CardDescription>
           </CardHeader>
-          <form onSubmit={handleLogin}>
-            <CardContent className="space-y-6">
+          <form action={handleLogin}>
+            {/* <CardContent className="space-y-6">
               {error && (
                 <Alert variant="destructive" className="animate-shake">
                   <AlertDescription>Credenciais de Login inválidas</AlertDescription>
@@ -127,20 +98,24 @@ export default function Login() {
                   />
                 </div>
               </div>
-            </CardContent>
+            </CardContent> */}
             <CardFooter className="pt-0">
               <Button
                 type="submit"
                 className="w-full bg-green-600 hover:bg-green-700"
+                name="provider"
+                value="google"
               >
-                {loading ? "Entrando..." : "Entrar"}
+                <ChromeIcon size={20} />
+                {loading ? "Entrando com o Google..." : "Entrar com o Google"}
               </Button>
             </CardFooter>
           </form>
         </Card>
 
         <p className="text-center text-gray-500 text-sm mt-8">
-          © {new Date().getFullYear()} Associação Realizando Sonhos. Todos os direitos reservados.
+          © {new Date().getFullYear()} Associação Realizando Sonhos. Todos os
+          direitos reservados.
         </p>
       </div>
     </main>
