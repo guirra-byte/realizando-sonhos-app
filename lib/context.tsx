@@ -127,8 +127,9 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
       ).toLocaleDateString("pt-BR"),
     };
 
-    setStudents((prev) => [tmp, ...prev]);
-    localStorage.setItem("students", JSON.stringify(students));
+    const updated = [tmp, ...students]
+    setStudents(updated);
+    localStorage.setItem("students", JSON.stringify(updated));
 
     async function createStudent() {
       await fetch("/api/alunos", {
