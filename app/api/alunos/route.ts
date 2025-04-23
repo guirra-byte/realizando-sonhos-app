@@ -1,9 +1,8 @@
 import { Student } from "@/lib/context";
 import { prismaClient } from "@/lib/prisma";
-import { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
 
-export async function GET(request: NextApiRequest) {
+export async function GET() {
   try {
     const students = await prismaClient.student.findMany();
     return NextResponse.json(students);
