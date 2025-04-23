@@ -53,6 +53,33 @@ export default function Cadastro() {
   // Context para adicionar alunos e responsáveis
   const { students, addStudent } = useCadastro();
 
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    const masked = value
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    setStudent({ ...student, guardianCPF: masked });
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    let masked = value;
+
+    if (value.length <= 10) {
+      // telefone fixo: (11) 1234-5678
+      masked = value
+        .replace(/^(\d{2})(\d)/g, "($1) $2")
+        .replace(/(\d{4})(\d{4})$/, "$1-$2");
+    } else {
+      // celular: (11) 91234-5678
+      masked = value
+        .replace(/^(\d{2})(\d)/g, "($1) $2")
+        .replace(/(\d{5})(\d{4})$/, "$1-$2");
+    }
+
+    setStudent({ ...student, guardianPhoneNumber: masked });
+  };
   useEffect(() => {
     setClasses((prev) => {
       const newClasses = students
@@ -103,8 +130,7 @@ export default function Cadastro() {
       title: "✅ Sucesso",
       description: "Aluno cadastrado com sucesso!",
       style: {
-        backgroundColor: "#13b387", // Verde
-        color: "#fff", // Texto branco
+        color: "#000", // Texto branco
         borderRadius: "8px", // Bordas arredondadas
         padding: "16px", // Padding para melhor espaçamento
         fontSize: "16px", // Tamanho de fonte agradável
@@ -188,12 +214,7 @@ export default function Cadastro() {
                           id="guardian"
                           placeholder="Nome Completo do Responsável"
                           value={student.guardian}
-                          onChange={(e) =>
-                            setStudent({
-                              ...student,
-                              guardian: e.target.value,
-                            })
-                          }
+                          onChange={handlePhoneChange}
                         />
                       </div>
 
@@ -203,12 +224,7 @@ export default function Cadastro() {
                           id="cpf"
                           placeholder="000.000.000-00"
                           value={student.guardianCPF}
-                          onChange={(e) =>
-                            setStudent({
-                              ...student,
-                              guardianCPF: e.target.value,
-                            })
-                          }
+                          onChange={handleCpfChange}
                         />
                       </div>
 
