@@ -29,9 +29,7 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { Student, useCadastro } from "@/lib/context";
 import { Sidebar } from "@/components/sidebar";
-import { Calendar } from "./ui/calendar";
 import { getSchoolYear } from "@/utils/get-school-year";
-
 export default function Cadastro() {
   const router = useRouter();
 
@@ -127,9 +125,9 @@ export default function Cadastro() {
 
     // Mostrar toast de sucesso
     toast({
-      title: "✅ Sucesso",
+      title: `✅ Seja Bem-Vindo ${student.name.split(" ")[0]}!`,
       description: "Aluno cadastrado com sucesso!",
-      style: {
+      style: {// Verde
         color: "#000", // Texto branco
         borderRadius: "8px", // Bordas arredondadas
         padding: "16px", // Padding para melhor espaçamento
@@ -214,7 +212,12 @@ export default function Cadastro() {
                           id="guardian"
                           placeholder="Nome Completo do Responsável"
                           value={student.guardian}
-                          onChange={handlePhoneChange}
+                          onChange={(e) =>
+                            setStudent({
+                              ...student,
+                              guardian: e.target.value,
+                            })
+                          }
                         />
                       </div>
 
@@ -237,12 +240,7 @@ export default function Cadastro() {
                           placeholder="(00) 00000-0000"
                           type="tel"
                           value={student.guardianPhoneNumber}
-                          onChange={(e) =>
-                            setStudent({
-                              ...student,
-                              guardianPhoneNumber: e.target.value,
-                            })
-                          }
+                          onChange={handlePhoneChange}
                         />
                       </div>
                     </div>
