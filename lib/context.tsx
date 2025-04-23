@@ -128,7 +128,6 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     };
 
     setStudents((prev) => [tmp, ...prev]);
-    localStorage.removeItem("students");
     localStorage.setItem("students", JSON.stringify(students));
 
     async function createStudent() {
