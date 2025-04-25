@@ -45,7 +45,7 @@ export default function Login() {
         <Card className="border-none shadow-lg overflow-hidden animate-fadeIn">
           <div className="h-2 bg-gradient-to-r from-yellow-400 via-green-500 to-blue-500"></div>
           <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-2xl font-bold text-center text-green-600">
+            <CardTitle className="text-2xl font-bold text-center text-[#3cb878]">
               Bem-vindo
             </CardTitle>
             <CardDescription className="text-center text-gray-600">
@@ -101,7 +101,7 @@ export default function Login() {
             <CardFooter className="pt-0">
               <Button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700"
+                className="w-full bg-[#3cb878] hover:bg-[#3cb878]/90"
                 name="provider"
                 value="google"
               >
