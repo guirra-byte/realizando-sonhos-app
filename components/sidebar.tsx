@@ -1,15 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Book,
-  GraduationCap,
-  Home,
-  Menu,
-  Users,
-  FileText,
-  FileBarChart,
-} from "lucide-react";
+import { GraduationCap, Menu, Users, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
