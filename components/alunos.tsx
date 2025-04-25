@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MoreHorizontal, SunMediumIcon, Sunset } from "lucide-react";
+import {
+  Moon,
+  MoreHorizontal,
+  Sun,
+  SunMediumIcon,
+  Sunset,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -42,6 +49,7 @@ import {
 } from "./ui/select";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -181,49 +189,81 @@ export default function AlunosPage({ user }: UserProps) {
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-4 w-full items-center">
-                <Card className="flex flex-row px-2 py-0.5 rounded-lg text-[#3b67eb] whitespace-nowrap text-sm font-medium shadow-sm">
-                  <CardHeader className="relative">
-                    <CardDescription>
-                      <span className="px-2 py-0.5 rounded-md bg-[#dbebfc] text-[#3b67eb] whitespace-nowrap text-sm font-medium">
-                        <strong>Total de Alunos</strong>
-                      </span>
-                    </CardDescription>
-                    <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-                      {students.length}
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-                <Card className="px-2 py-0.5 rounded-lg whitespace-nowrap text-[#258ca9] text-sm font-medium shadow-sm">
-                  <CardHeader className="relative">
-                    <CardDescription>
-                      <span className="px-2 py-0.5 rounded-md bg-[#cbf3fb] whitespace-nowrap text-[#258ca9] text-sm font-medium">
-                        <strong>Alunos da Manhã</strong>
-                      </span>
-                    </CardDescription>
-                    <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-                      {
-                        students.filter((student) => student.shift === "MANHÃ")
-                          .length
-                      }
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-                <Card className="px-2 py-0.5 rounded-lg whitespace-nowrap text-[#cd225d] text-sm font-medium shadow-sm">
-                  <CardHeader className="relative">
-                    <CardDescription>
-                      <span className="px-2 py-0.5 rounded-md bg-[#fbebec] whitespace-nowrap text-[#cd225d] text-sm font-medium">
-                        <strong>Alunos da Tarde</strong>
-                      </span>
-                    </CardDescription>
-                    <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-                      {
-                        students.filter((student) => student.shift === "TARDE")
-                          .length
-                      }
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
+
+              <div className="container mx-auto py-2">
+                <div className="grid gap-4 md:grid-cols-3">
+                  {/* Total Students Card */}
+                  <Card className="border border-gray-200 hover:border-gray-300 transition-colors">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="text-base font-medium text-gray-700">
+                          Total de Alunos
+                        </CardTitle>
+                        <Badge
+                          variant="outline"
+                          className="bg-gray-100 hover:bg-gray-100 text-gray-700"
+                        >
+                          <Users className="h-3 w-3 mr-1" />
+                          Todos
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-3xl font-semibold">
+                        {students.length}
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  {/* Morning Students Card */}
+                  <Card className="border border-gray-200 hover:border-gray-300 transition-colors">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="text-base font-medium text-gray-700">
+                          Alunos da Manhã
+                        </CardTitle>
+                        <Badge className="bg-amber-100 hover:bg-amber-100 text-amber-700 border-amber-200">
+                          <Sun className="h-3 w-3 mr-1" />
+                          Manhã
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-3xl font-semibold">
+                        {
+                          students.filter(
+                            (student) => student.shift === "MANHÃ"
+                          ).length
+                        }
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  {/* Afternoon Students Card */}
+                  <Card className="border border-gray-200 hover:border-gray-300 transition-colors">
+                    <CardHeader className="pb-2">
+                      <div className="flex justify-between items-center">
+                        <CardTitle className="text-base font-medium text-gray-700">
+                          Alunos da Tarde
+                        </CardTitle>
+                        <Badge className="bg-blue-100 hover:bg-blue-100 text-blue-700 border-blue-200">
+                          <Moon className="h-3 w-3 mr-1" />
+                          Tarde
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-3xl font-semibold">
+                        {" "}
+                        {
+                          students.filter(
+                            (student) => student.shift === "TARDE"
+                          ).length
+                        }
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
 
               <div>
@@ -285,20 +325,17 @@ export default function AlunosPage({ user }: UserProps) {
                           </TableCell>
                           <TableCell>{student.guardian}</TableCell>
                           <TableCell>
-                            <Badge
-                              className={`flex items-center justify-center shadow-none rounded-lg ${
-                                student.shift === "MANHÃ"
-                                  ? "bg-[#cbf3fb] whitespace-nowrap text-[#258ca9]"
-                                  : "bg-[#fbebec] whitespace-nowrap text-[#cd225d]"
-                              }`}
-                            >
-                              {student.shift === "TARDE" ? (
-                                <Sunset className="w-4 h-4 mr-1" />
-                              ) : (
-                                <SunMediumIcon className="w-4 h-4 mr-1" />
-                              )}
-                              <strong>{student.shift}</strong>
-                            </Badge>
+                            {student.shift === "MANHÃ" ? (
+                              <Badge className="bg-amber-100 hover:bg-amber-100 text-amber-700 border-amber-200">
+                                <Sun className="h-3 w-3 mr-1" />
+                                Manhã
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-blue-100 hover:bg-blue-100 text-blue-700 border-blue-200">
+                                <Moon className="h-3 w-3 mr-1" />
+                                Tarde
+                              </Badge>
+                            )}
                           </TableCell>
 
                           <TableCell>
