@@ -11,9 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     signIn: async ({ user }) => {
-      if (!user.email) return false;
-
-      const canAccess = allowedEmails(user.email);
+      const canAccess = allowedEmails(user?.email);
       if (!canAccess) return false;
       return true;
     },

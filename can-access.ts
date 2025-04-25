@@ -1,4 +1,4 @@
-export const allowedEmails = (email: string) => {
+export const allowedEmails = (email?: string | null) => {
   if (!process.env.ALLOWED_EMAILS) return false;
 
   const emails = process.env.ALLOWED_EMAILS.split(",");
