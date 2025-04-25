@@ -9,12 +9,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
   ],
-  callbacks: {
-    signIn: async ({ user }) => {
-      const canAccess = allowedEmails(user?.email);
-      if (!canAccess) return false;
-      return true;
-    },
-  },
   pages: { signIn: "/auth/login" },
 });
