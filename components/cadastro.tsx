@@ -462,6 +462,7 @@ export default function Cadastro() {
                         <Input
                           id="cpf"
                           placeholder="000.000.000-00"
+                          maxLength={14}
                           required
                           value={student.guardianCPF}
                           onChange={handleCpfChange}
@@ -475,6 +476,7 @@ export default function Cadastro() {
                         <Input
                           id="guardian"
                           placeholder="(00) 00000-0000"
+                          maxLength={15}
                           required
                           type="tel"
                           value={student.guardianPhoneNumber}
