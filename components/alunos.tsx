@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import {
+  Download,
   Moon,
   MoreHorizontal,
   Sun,
-  SunMediumIcon,
-  Sunset,
+  Trash2,
   Users,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -47,14 +48,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { User } from "next-auth";
+import { isSameMonth } from "date-fns";
+import Confetti from "react-confetti-boom";
+import { Checkbox } from "./ui/checkbox";
 
 const shiftSelectAssign: Record<string, string> = {
   morning: "MANHÃ",
@@ -69,6 +67,7 @@ export default function AlunosPage({ user }: UserProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchShift, setSearchShift] = useState("both");
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
+  const [monthlyBirthdays, setMonthBirthdays] = useState<Student[]>([]);
 
   const [isInfosModalOpen, setIsInfosModalOpen] = useState(false);
   const [infosModalData, setInfosModalData] = useState<Student>();
@@ -87,6 +86,12 @@ export default function AlunosPage({ user }: UserProps) {
   }, []);
 
   useEffect(() => {
+    let filterByBirthdayDate = students.filter((student) =>
+      isSameMonth(student.birthDate, new Date())
+    );
+
+    setMonthBirthdays(filterByBirthdayDate);
+
     let termsFilter = students.filter((student) =>
       student.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -190,6 +195,114 @@ export default function AlunosPage({ user }: UserProps) {
                 </div>
               </div>
 
+              <div className="container mx-auto">
+                <div className="grid gap-4">
+                  {/* Total Students Card */}
+                  <Card className="overflow-hidden hover:border-gray-300 transition-colors border-t-0 border-grad relative">
+                    <div className="h-2 bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-500"></div>
+
+                    <CardHeader className="pb-2 relative">
+                      {/* Container para limitar o confetti */}
+                      {monthlyBirthdays.length > 0 && (
+                        <div className="absolute inset-0 pointer-events-none z-0">
+                          <Confetti
+                            mode="fall"
+                            particleCount={70}
+                            fadeOutHeight={10}
+                            colors={["#f59e0b", "#ec4899", "#8b5cf6"]}
+                          />
+                        </div>
+                      )}
+
+                      <div className="relative z-10 flex justify-between items-center">
+                        <CardTitle className="text-base font-medium text-gray-700">
+                          <h2 className="text-2xl font-semibold mb-4 flex items-center">
+                            <span className="mr-2 text-3xl">🎂</span>
+                            Aniversariantes do Mês
+                          </h2>
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent>
+                      {/* Tabela dos aniversariantes */}
+                      <div className="rounded-lg border">
+                        <Table className="text-sm [&_td]:py-2 [&_th]:py-1">
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Aniversariante</TableHead>
+                              <TableHead>Série</TableHead>
+                              <TableHead>Responsável</TableHead>
+                              <TableHead>Turno</TableHead>
+                              <TableHead>Data do Aniversário</TableHead>
+                            </TableRow>
+                          </TableHeader>
+
+                          <TableBody>
+                            {monthlyBirthdays.length > 0 ? (
+                              monthlyBirthdays.map((student, index) => (
+                                <TableRow key={index}>
+                                  <TableCell className="font-medium">
+                                    <Badge className="bg-yellow-500/10 dark:bg-yellow-500/20 hover:bg-yellow-500/10 text-yellow-500 border-yellow-500/60 shadow-none rounded-full">
+                                      <span className="mr-2">🎉</span>
+                                      {student.name}
+                                    </Badge>
+                                  </TableCell>
+
+                                  <TableCell>
+                                    <Badge
+                                      variant="outline"
+                                      className="rounded-lg"
+                                    >
+                                      {student.schoolYear}
+                                    </Badge>
+                                  </TableCell>
+
+                                  <TableCell>{student.guardian}</TableCell>
+
+                                  <TableCell>
+                                    {student.shift === "MANHÃ" ? (
+                                      <Badge className="bg-amber-100 hover:bg-amber-100 text-amber-700 border-amber-200">
+                                        <Sun className="h-3 w-3 mr-1" />
+                                        Manhã
+                                      </Badge>
+                                    ) : (
+                                      <Badge className="bg-blue-100 hover:bg-blue-100 text-blue-700 border-blue-200">
+                                        <Moon className="h-3 w-3 mr-1" />
+                                        Tarde
+                                      </Badge>
+                                    )}
+                                  </TableCell>
+
+                                  <TableCell className="font-medium">
+                                    <Badge className="bg-pink-500/10 dark:bg-pink-500/20 hover:bg-pink-500/10 text-pink-500 border-pink-500/60 shadow-none rounded-full">
+                                      <span className="mr-2">🎈</span>
+                                      {student.birthDate}
+                                    </Badge>
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            ) : (
+                              <TableRow>
+                                <TableCell
+                                  colSpan={7}
+                                  className="h-24 text-center"
+                                >
+                                  {searchTerm
+                                    ? "Nenhum resultado encontrado."
+                                    : "Nenhum aluno aniversariante."}
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+
+              <hr />
               <div className="container mx-auto py-2">
                 <div className="grid gap-4 md:grid-cols-3">
                   {/* Total Students Card */}
@@ -266,43 +379,86 @@ export default function AlunosPage({ user }: UserProps) {
                 </div>
               </div>
 
-              <div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <Input
-                      placeholder="Buscar alunos..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="max-w-sm"
-                    />
-
-                    <Select onValueChange={(value) => setSearchShift(value)}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Turno" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="morning">Manhã</SelectItem>
-                        <SelectItem value="afternoon">Tarde</SelectItem>
-                        <SelectItem value="both">Ambos</SelectItem>
-                      </SelectContent>
-                    </Select>
+              {/* <Card className="p-6 space-y-6 rounded-lg border hover:border-gray-300"> */}
+                {/* Seção de Selecionados */}
+                {/* <div className="flex items-center justify-between px-4 py-3 border rounded-lg transition-all duration-200 hover:border-gray-300">
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant="outline"
+                      className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                    >
+                      selected
+                    </Badge>
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      asChild
-                      className="bg-[#056bbd] hover:bg-[#056bbd]/80 text-white py-2 px-4 rounded-lg font-semibold"
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-1 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
                     >
-                      <Link href="/cadastro?tipo=aluno">
-                        Cadastrar Novo Aluno
-                      </Link>
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Delete</span>
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-8 gap-1">
+                      <Download className="h-3.5 w-3.5" />
+                      <span>Export</span>
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <X className="h-4 w-4" />
+                      <span className="sr-only">Cancel</span>
                     </Button>
                   </div>
+                </div> */}
+
+                {/* Seção de Busca e Filtros */}
+              {/* </Card> */}
+
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <Input
+                    placeholder="Buscar alunos..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="max-w-sm"
+                  />
+
+                  <Select onValueChange={(value) => setSearchShift(value)}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Turno" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="morning">Manhã</SelectItem>
+                      <SelectItem value="afternoon">Tarde</SelectItem>
+                      <SelectItem value="both">Ambos</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+
+                <Button
+                  asChild
+                  className="bg-[#056bbd] hover:bg-[#056bbd]/80 text-white py-2 px-4 rounded-lg font-semibold"
+                >
+                  <Link href="/cadastro?tipo=aluno">Cadastrar Novo Aluno</Link>
+                </Button>
               </div>
+
               <div className="rounded-lg border">
                 <Table className="text-sm [&_td]:py-2 [&_th]:py-1">
                   <TableHeader>
                     <TableRow>
+                      <TableHead>
+                        <Checkbox
+                          // checked={allSelected}
+                          // onCheckedChange={toggleSelectAll}
+                          // aria-label="Select all rows"
+                          // ref={(input) => {
+                          //   if (input) {
+                          //     input.indeterminate = someSelected;
+                          //   }
+                          // }}
+                          className="translate-y-[2px]"
+                        />
+                      </TableHead>
                       <TableHead>Nome</TableHead>
                       <TableHead>Série</TableHead>
                       <TableHead>Responsável</TableHead>
@@ -315,6 +471,19 @@ export default function AlunosPage({ user }: UserProps) {
                     {filteredStudents.length > 0 ? (
                       filteredStudents.map((student, index) => (
                         <TableRow key={index} className="">
+                          <TableCell className="font-medium">
+                            <Checkbox
+                              // checked={allSelected}
+                              // onCheckedChange={toggleSelectAll}
+                              // aria-label="Select all rows"
+                              // ref={(input) => {
+                              //   if (input) {
+                              //     input.indeterminate = someSelected;
+                              //   }
+                              // }}
+                              className="translate-y-[2px]"
+                            />
+                          </TableCell>
                           <TableCell className="font-medium">
                             {student.name}
                           </TableCell>
