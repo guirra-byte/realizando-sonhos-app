@@ -84,11 +84,15 @@ npm --force install
 
 ### 3. Configure as variáveis de ambiente
 
-Crie um arquivo `.env.local` com base no `.env.example` e adicione as seguintes chaves do Supabase:
+Crie um arquivo `.env.local` e adicione as seguintes chaves:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
+# SUPABASE PRISMA CONNECTION URL
+DATABASE_URL=""
+
+# GOOGLE OAuth CREDENTIALS
+AUTH_GOOGLE_ID=""
+AUTH_GOOGLE_SECRET=""
 ```
 
 ### 4. Inicie o servidor de desenvolvimento
