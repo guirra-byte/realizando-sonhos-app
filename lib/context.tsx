@@ -51,8 +51,6 @@ export type Responsavel = {
 type CadastroContextType = {
   students: Student[];
   addStudent: (student: Student) => void;
-  addClass: (_class: Class) => void;
-  classes: DbClass[];
 };
 
 // Criando o contexto
@@ -127,7 +125,7 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
       ).toLocaleDateString("pt-BR"),
     };
 
-    const updated = [tmp, ...students]
+    const updated = [tmp, ...students];
     setStudents(updated);
     localStorage.setItem("students", JSON.stringify(updated));
 
@@ -141,23 +139,9 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     createStudent();
   };
 
-  const addClass = (_class: DbClass) => {
-    localStorage.removeItem("classes");
-    localStorage.setItem("classes", JSON.stringify(_class));
-
-    async function createClass() {
-      await fetch("/api/turmas", {
-        method: "POST",
-        body: JSON.stringify(_class),
-      });
-    }
-
-    createClass();
-  };
-
   return (
     <CadastroContext.Provider
-      value={{ students, addStudent, addClass, classes }}
+      value={{ students, addStudent }}
     >
       {children}
     </CadastroContext.Provider>
