@@ -54,6 +54,42 @@ Cada issue representa uma tarefa, melhoria ou problema a ser resolvido.
 - Sempre que possível, inclua o **número da issue** logo após o tipo.
 - Mantenha a descrição **curta e direta**.
 
+## Padrões de Commit:
+### ✅ Exemplos
+
+- `feat(turmas): adicionar criação de nova turma`
+- `fix(presenca): corrigir erro ao marcar presença`
+- `docs(readme): atualizar instruções de contribuição`
+- `refactor(alunos): melhorar lógica de associação`
+- `chore: atualizar dependências do projeto`
+
+---
+
+### 📌 Tipos de commit
+
+| Tipo       | Descrição                                                                 |
+|------------|---------------------------------------------------------------------------|
+| `feat`     | Uma nova funcionalidade                                                   |
+| `fix`      | Correção de bugs                                                          |
+| `docs`     | Alterações na documentação (README, comentários, etc.)                   |
+| `style`    | Ajustes de formatação (semântica, espaços, vírgulas etc. sem código novo) |
+| `refactor` | Refatorações sem alterar funcionalidades                                 |
+| `test`     | Adição ou modificação de testes                                           |
+| `chore`    | Tarefas administrativas ou técnicas (ex: configs, scripts, etc.)          |
+
+---
+
+### 💡 Boas práticas
+
+- Use o imperativo no presente: _"add"_, _"fix"_ e não _"added"_ ou _"adding"_.
+- Mantenha a descrição curta (máximo 72 caracteres).
+- Use escopo entre parênteses **apenas se necessário** para indicar onde a mudança ocorreu (ex: `feat(turmas)`).
+
+---
+
+Seguindo essa convenção, o histórico de commits se torna mais claro, útil e fácil de navegar para toda a comunidade.
+
+
 ## 🧱 Stack do Projeto
 
 - **Next.js (App Router)**
