@@ -48,7 +48,6 @@ export function Sidebar() {
               className="h-auto"
             />
           </div>
-
           <nav className="flex-1 px-4 py-6 space-y-1 text-sm">
             {[
               {
@@ -61,11 +60,11 @@ export function Sidebar() {
                 label: "Alunos",
                 icon: GraduationCap,
               },
-              {
-                href: "/turmas",
-                label: "Turmas",
-                icon: Users,
-              },
+              // {
+              //   href: "/turmas",
+              //   label: "Turmas",
+              //   icon: Users,
+              // },
               // Adicione mais aqui se quiser
             ].map(({ href, label, icon: Icon }) => (
               <Link
