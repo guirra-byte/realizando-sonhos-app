@@ -1,54 +1,71 @@
-![image (11)](https://github.com/user-attachments/assets/d2befbfd-c60d-4d21-8ba1-6ce47533e736)
+![image (3)](https://github.com/user-attachments/assets/56145d79-2fcc-4386-86ac-694c767303cd)
 
-# 🧪 Desafio Técnico - Desenvolvedor Next.js  
+# 🧪 Projeto Comunitário - Realizando Sonhos App
 
-## 📚 Visão Geral
+Este repositório faz parte da iniciativa do projeto social  <a src="https://www.realizandosonhos.org.br/">Realizando Sonhos</a> , voltado a transformar a vida de crianças e adolescentes por meio da **educação, acolhimento e oportunidades**.  
 
-Este projeto é parte de um sistema de gerenciamento de alunos para o projeto social **Realizando Sonhos**, voltado para o controle de **turmas**, **alunos**, **lista de chamada** e **histórico de presença**.
+O sistema é uma ferramenta para **educadores voluntários** realizarem o **gerenciamento de turmas, alunos, listas de chamada e histórico de presença**.
 
-O sistema já está parcialmente implementado em **Next.js (App Router)**. Seu desafio será **completar funcionalidades-chave relacionadas ao serviço de turmas** e **associação de alunos**.
+O projeto é desenvolvido de forma **colaborativa** e **comunitária**. Qualquer pessoa com interesse em tecnologia e impacto social é bem-vinda para contribuir!
 
-### 📁 Diretório `/components/turmas`
+## 📌 Como contribuir
 
-Dentro do diretório `/components/turmas` você encontrará os componentes já criados para o gerenciamento de turmas (tais componentes podem conter erros).
+Estamos usando as **issues do GitHub como painel Kanban (Scrum)**.  
+Cada issue representa uma tarefa, melhoria ou problema a ser resolvido.
 
-Você deverá completar e integrar as funcionalidades de **criar, editar, deletar e atualizar turmas**, além de **adicionar alunos às turmas**.
+> Esse Projeto é completamente livre para contribuir, suas ideias são **valiosas** demais para não serem compartilhadas.
 
-Também está incluída a estrutura para a **lista de chamada** e o **histórico de presença dos alunos**.
+### 🪪 Regras de Contribuição
 
-Se você está vendo este repositório você também tem acesso ao **v0** do Projeto (para saber como a interface deverá se parecer e funcionar) e ao **Supabase DB**.
+1. **Escolha uma issue disponível** (com o label `disponível` ou `boa primeira contribuição`), ou crie uma issue viável que você percebe necessidade de ser implementada.
+2. Comente na issue pedindo para ser designado(a).
+3. Crie uma branch a partir da `main` - seguindo os padrões de nomeação de branch.
+5. Envie seu pull request com uma descrição clara da sua contribuição.
+6. Aguarde a revisão e feedback.
 
-## 🎯 Objetivo do Desafio
+> 💬 Se tiver dúvidas, abra uma issue ou participe da discussão de uma já existente.
 
-Você deverá implementar e/ou completar as seguintes funcionalidades:
+## 📂 Padrões para nomes de branch
+### ✅ Exemplos
 
-### ✅ Funcionalidades de Turmas
+- `feature/12-criar-turma`
+- `fix/23-presenca-nao-salva`
+- `refactor/31-ajustar-layout-turmas`
+- `docs/45-atualizar-readme`
 
-- Criar nova turma
-- Editar turma existente
-- Deletar turma
-- Atualizar dados da turma (nome, dias da semana, turno, etc.)
+---
 
-### ✅ Associação de Alunos
+## 📌 Tipos mais comuns
 
-- Atribuir alunos a suas respectivas turmas
-- Visualizar alunos por turma
+| Prefixo     | Quando usar                                                |
+|-------------|-------------------------------------------------------------|
+| `feature/`  | Para novas funcionalidades                                  |
+| `fix/`      | Para correção de bugs                                       |
+| `refactor/` | Para melhorias internas no código sem alteração funcional   |
+| `chore/`    | Para tarefas operacionais ou de configuração (ex: lint)     |
+| `docs/`     | Para alterações em documentação                             |
+| `test/`     | Para adicionar ou ajustar testes automatizados              |
 
-### ✅ Lista de Chamada
+---
 
-- Criar sistema de lista de presença por turma
-- Marcar presença de alunos em datas específicas
-- Armazenar histórico de presença por aluno e turma
+## 💡 Dicas adicionais
 
-## 🧱 Stack Utilizada
+- Use **letras minúsculas** e **hífens (-)** para separar palavras.
+- Sempre que possível, inclua o **número da issue** logo após o tipo.
+- Mantenha a descrição **curta e direta**.
 
-- **Next.js** (App Router)
+## 🧱 Stack do Projeto
+
+- **Next.js (App Router)**
 - **TypeScript**
 - **TailwindCSS**
 - **Supabase** (Auth e Database)
-- **Shadcn UI** (componentes)
-- **PostgreSQL** (via Supabase)
 - **Prisma ORM**
+- **PostgreSQL** (via Supabase)
+- **Shadcn UI** (componentes)
+
+---
+
 
 ## 🚀 Como começar
 
@@ -82,41 +99,7 @@ npm run dev
 
 ---
 
-## ✍️ O que será avaliado
-
-- Organização e estrutura do código  
-- Boas práticas com React/Next.js (hooks, componentes, etc.)  
-- Clareza e reutilização de código  
-- Uso correto do Supabase (CRUD de turmas, relacionamento com alunos)  
-- UX simples e funcional para uso em um projeto social  
-
-## 📦 Extras (Opcional)
-
-Se quiser ir além, você pode implementar:
-
-- Confirmação antes de deletar turma ou aluno  
-
-## 📩 Entrega
-
-Crie um repositório **privado** (com acesso compartilhado) no GitHub e envie o link para o revisor.
-
-## 👀 Atenção
-
-Este desafio técnico pode ser um dos desafios ou o único desafio prático que você enfrentará no processo seletivo. Ele foi desenvolvido para avaliar suas habilidades com Next.js, React, TypeScript e Supabase, dentro de um contexto real de projeto.
-
-A proposta é que você interaja com funcionalidades já existentes e complemente o sistema, focando principalmente no módulo de turmas: criação, edição, deleção, adição de alunos e lista de presença.
-
-Após a conclusão do desafio, será agendada uma reunião de revisão com a equipe técnica, onde você poderá apresentar suas decisões, explicar suas implementações e também tirar dúvidas.
-
-⚠️ Lembre-se: o banco de dados utilizado neste desafio é o ambiente de produção, usado por educadores voluntários. Cuidado ao fazer alterações nos dados reais.
-
-Caso tenha qualquer dúvida durante o desafio, sinta-se à vontade para entrar em contato.
-
 ## 💙 Sobre o Projeto Realizando Sonhos
 
 Um projeto social dedicado a transformar a vida de crianças e adolescentes por meio da educação e acolhimento.  
 Seu código fará parte de uma ferramenta usada por educadores voluntários no dia a dia.
-
-Se tiver dúvidas, fique à vontade para abrir uma *Issue* ou entrar em contato com a equipe de suporte do desafio.
-
-**Boa sorte!** 🚀
