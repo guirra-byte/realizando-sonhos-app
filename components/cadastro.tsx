@@ -290,7 +290,7 @@ export default function Cadastro() {
     setContract({
       value: contractValue,
       studentName: student.name,
-      at: format(new Date(), "dd/MM/yyyy"),
+      at: new Intl.DateTimeFormat("pt-BR").format(new Date()),
       shift: student.shift,
       guardian: {
         name: student.guardian,
@@ -409,9 +409,9 @@ export default function Cadastro() {
                             >
                               <CalendarIcon className="mr-2 h-4 w-4" />
                               {birthDate ? (
-                                format(birthDate, "dd/MM/yyyy", {
-                                  locale: ptBR,
-                                })
+                                new Intl.DateTimeFormat("pt-BR").format(
+                                  birthDate
+                                )
                               ) : (
                                 <span>Selecionar data</span>
                               )}
@@ -428,7 +428,10 @@ export default function Cadastro() {
                                   setBirthDate(e);
                                   setStudent((prev) => ({
                                     ...prev,
-                                    birthDate: format(e, "dd/MM/yyyy"),
+                                    birthDate: new Intl.DateTimeFormat([
+                                      "ban",
+                                      "id",
+                                    ]).format(e),
                                   }));
                                 }
                               }}
