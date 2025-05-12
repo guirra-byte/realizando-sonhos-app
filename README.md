@@ -138,6 +138,11 @@ npm run dev
 
 ---
 
+## 💙 Sobre o Projeto Realizando Sonhos
+
+Um projeto social dedicado a transformar a vida de crianças e adolescentes por meio da educação e acolhimento.  
+Seu código fará parte de uma ferramenta usada por educadores voluntários no dia a dia.
+
 ## 🤝 Contribuindo
 Este é um projeto com fins sociais e educacionais. Por isso, contribuições são bem-vindas.
 
@@ -146,9 +151,6 @@ Por favor, abra uma issue ou me envie uma mensagem explicando sua intenção de 
 <br>
 
 Meu contato WhatsApp: `+55 (61) 99283-9756`
+<br>
 Meu email: `guirramatheus3@gmail.com`
 
-## 💙 Sobre o Projeto Realizando Sonhos
-
-Um projeto social dedicado a transformar a vida de crianças e adolescentes por meio da educação e acolhimento.  
-Seu código fará parte de uma ferramenta usada por educadores voluntários no dia a dia.
