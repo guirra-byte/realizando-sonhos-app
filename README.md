@@ -143,7 +143,10 @@ Este é um projeto com fins sociais e educacionais. Por isso, contribuições s�
 
 Entre em contato antes de contribuir
 Por favor, abra uma issue ou me envie uma mensagem explicando sua intenção de contribuir. Assim conseguimos alinhar objetivos e evitar retrabalho.
+<br>
+
 Meu contato WhatsApp: `+55 (61) 99283-9756`
+Meu email: `guirramatheus3@gmail.com`
 
 ## 💙 Sobre o Projeto Realizando Sonhos
 
