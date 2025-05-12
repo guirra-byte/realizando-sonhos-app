@@ -138,6 +138,13 @@ npm run dev
 
 ---
 
+## 🤝 Contribuindo
+Este é um projeto com fins sociais e educacionais. Por isso, contribuições são bem-vindas.
+
+Entre em contato antes de contribuir
+Por favor, abra uma issue ou me envie uma mensagem explicando sua intenção de contribuir. Assim conseguimos alinhar objetivos e evitar retrabalho.
+Meu contato WhatsApp: `+55 (61) 99283-9756`
+
 ## 💙 Sobre o Projeto Realizando Sonhos
 
 Um projeto social dedicado a transformar a vida de crianças e adolescentes por meio da educação e acolhimento.  
