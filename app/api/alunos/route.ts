@@ -37,3 +37,25 @@ export async function POST(request: Request) {
     }
   }
 }
+
+export async function PUT(request: Request) {
+  const data = (await request.json());
+  const { id, ...rest } = data;
+  try {
+    const updatedStudent = await prismaClient.student.update({
+      where: { id },
+      data: rest,
+    })
+    return new Response(JSON.stringify(updatedStudent), 
+    {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    }
+  );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ message: "Erro ao editar aluno", error: String(error) }),
+      { status: 500 }
+    );
+    }
+  }
