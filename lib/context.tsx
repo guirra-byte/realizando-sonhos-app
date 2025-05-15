@@ -28,6 +28,7 @@ export type ClassData = {
 };
 
 export type Student = {
+  id: number,
   name: string;
   birthDate: string;
   additionalInfos?: string;
@@ -51,6 +52,7 @@ export type Responsavel = {
 type CadastroContextType = {
   students: Student[];
   addStudent: (student: Student) => void;
+  updateStudent: (student: Partial<Student>) => Promise<void>;
 };
 
 // Criando o contexto
@@ -124,24 +126,40 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
         student.birthDate.replaceAll("-", "/")
       ).toLocaleDateString("pt-BR"),
     };
-
+ 
     const updated = [tmp, ...students];
     setStudents(updated);
     localStorage.setItem("students", JSON.stringify(updated));
-
+    
     async function createStudent() {
       await fetch("/api/alunos", {
         method: "POST",
         body: JSON.stringify(tmp),
       });
     }
-
+    
     createStudent();
   };
+  
+  async function updateStudent(updatedStudent: Partial<Student>){
+    const response = await fetch("/api/alunos", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedStudent),
+    });
+
+  if (!response.ok) return;
+  const saved = (await response.json()) as Student;
+  const newList = students.map(s =>
+    s.guardianCPF === saved.guardianCPF ? saved : s
+  );
+  setStudents(newList);
+  localStorage.setItem("students", JSON.stringify(newList));
+  }
 
   return (
     <CadastroContext.Provider
-      value={{ students, addStudent }}
+      value={{ students, addStudent, updateStudent }}
     >
       {children}
     </CadastroContext.Provider>
