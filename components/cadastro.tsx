@@ -33,6 +33,7 @@ import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { CurrencyInput } from "@/utils/currency-input";
+import { DateTimePicker } from "./ui/datetime-picker";
 
 export type ContratoProps = {
   value: string;
@@ -272,11 +273,14 @@ export default function Cadastro() {
   // Envio do formulário
   const handleStudentSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const { name, birthDate, guardian, guardianCPF, schoolYear, shift } =
+
+    student.birthDate = new Intl.DateTimeFormat("pt-BR").format(birthDate)
+
+    const { name, guardian, guardianCPF, schoolYear, shift } =
       student;
 
     const camposObrigatoriosPreenchidos =
-      name && birthDate && guardian && guardianCPF && schoolYear && shift;
+      name && guardian && guardianCPF && schoolYear && shift;
 
     if (!camposObrigatoriosPreenchidos) {
       toast({
@@ -401,45 +405,16 @@ export default function Cadastro() {
                         <Label htmlFor="data-nascimento">
                           Data de Nascimento*
                         </Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
+                            <DateTimePicker
                               className="w-full justify-start text-left font-normal text-muted-foreground"
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {birthDate ? (
-                                new Intl.DateTimeFormat("pt-BR").format(
-                                  birthDate
-                                )
-                              ) : (
-                                <span>Selecionar data</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
+                              displayFormat={{ hour24: "dd/MM/yyyy" }}
+                              placeholder="ex.: 20/02/2015"
+                              granularity="day"
+                              value={birthDate}
+                              onChange={setBirthDate}
                               locale={ptBR}
-                              id="data-nascimento"
-                              selected={birthDate}
-                              onSelect={(e) => {
-                                if (e) {
-                                  setBirthDate(e);
-                                  setStudent((prev) => ({
-                                    ...prev,
-                                    birthDate: new Intl.DateTimeFormat([
-                                      "ban",
-                                      "id",
-                                    ]).format(e),
-                                  }));
-                                }
-                              }}
-                              initialFocus
-                              required
+                              showOutsideDays={true}
                             />
-                          </PopoverContent>
-                        </Popover>
                       </div>
                     </div>
 
