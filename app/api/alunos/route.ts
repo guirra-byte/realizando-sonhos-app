@@ -19,9 +19,9 @@ export async function GET() {
 export async function POST(request: Request) {
   const data = (await request.json()) as Student;
   try {
-    await prismaClient.student.create({ data: { ...data } });
+    const created = await prismaClient.student.create({ data: { ...data } });
     return new Response(
-      JSON.stringify({ message: "Aluno salvo com sucesso!" }),
+      JSON.stringify(created),
       {
         status: 201,
         headers: { "Content-Type": "application/json" },
