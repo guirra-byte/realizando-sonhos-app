@@ -28,7 +28,7 @@ export type ClassData = {
 };
 
 export type Student = {
-  id: number,
+  id?: number,
   name: string;
   birthDate: string;
   additionalInfos?: string;
