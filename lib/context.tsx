@@ -1,10 +1,12 @@
 "use client";
 
 import { Class } from "@/components/turmas/class-management";
+import { toast } from "@/components/ui/use-toast";
 import { formatCPF, formatName } from "@/utils/format-fns";
 import { getSchoolYear } from "@/utils/get-school-year";
 import { getShift } from "@/utils/get-shift";
 import { Class as DbClass } from "@prisma/client";
+import { parse } from "date-fns/parse";
 import {
   createContext,
   useContext,
@@ -122,39 +124,63 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
       guardianCPF: formatCPF(student.guardianCPF),
       shift: getShift(student.shift),
       schoolYear: getSchoolYear(student.schoolYear),
-      birthDate: new Date(
-        student.birthDate.replaceAll("-", "/")
+      birthDate: parse(
+        student.birthDate,
+        "dd/MM/yyyy",
+        new Date()
       ).toLocaleDateString("pt-BR"),
     };
- 
+
     const updated = [tmp, ...students];
     setStudents(updated);
     localStorage.setItem("students", JSON.stringify(updated));
-    
+
     async function createStudent() {
-      await fetch("/api/alunos", {
+      const resp = await fetch("/api/alunos", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tmp),
       });
+      if (!resp.ok) throw new Error("Falha na criação");
+      const saved = (await resp.json()) as Student;
+      setStudents([saved, ...students]);
+      localStorage.setItem("students", JSON.stringify([saved, ...students]));
     }
-    
+
     createStudent();
   };
-  
-  async function updateStudent(updatedStudent: Partial<Student>){
+
+  async function updateStudent(updatedStudent: Partial<Student>) {
     const response = await fetch("/api/alunos", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedStudent),
     });
 
-  if (!response.ok) return;
-  const saved = (await response.json()) as Student;
-  const newList = students.map(s =>
-    s.guardianCPF === saved.guardianCPF ? saved : s
-  );
-  setStudents(newList);
-  localStorage.setItem("students", JSON.stringify(newList));
+    if (!response.ok) {
+      toast({
+      title: "Erro!",
+      description: `Ocorreu algum problema interno ao editar o aluno(a).`,
+      duration: 5000,
+      variant: "destructive",
+      })
+      
+      return
+    };
+    const saved = (await response.json()) as Student;
+    const newList = students.map(s =>
+      s.guardianCPF === saved.guardianCPF ? saved : s
+    );
+    setStudents(newList);
+    localStorage.setItem("students", JSON.stringify(newList));
+
+    toast({
+      title: "Sucesso!",
+      description: `Aluno(a) ${saved.name} editado com sucesso.`,
+      duration: 5000,
+      variant: "default",
+      className: "bg-green-600 text-white",
+    });
   }
 
   return (
