@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const data = (await request.json()) as Student;
   try {
-    const created = await prismaClient.student.create({ data: { ...data } });
+    const created = await prismaClient.student.create({ data });
     return new Response(
       JSON.stringify(created),
       {
