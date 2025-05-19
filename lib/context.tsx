@@ -7,6 +7,7 @@ import { getSchoolYear } from "@/utils/get-school-year";
 import { getShift } from "@/utils/get-shift";
 import { Class as DbClass } from "@prisma/client";
 import { parse } from "date-fns/parse";
+import { Router } from "next/router";
 import {
   createContext,
   useContext,
@@ -151,6 +152,16 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
   };
 
   async function updateStudent(updatedStudent: Partial<Student>) {
+    
+    if(!updatedStudent.name?.includes(" ") || updatedStudent.name.length < 3) {
+      toast({
+      title: "Erro!",
+      description: `O nome do aluno está incompleto.`,
+      duration: 5000,
+      variant: "destructive",
+      })
+      return
+  }
     const response = await fetch("/api/alunos", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -159,8 +170,8 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
 
     if (!response.ok) {
       toast({
-      title: "Erro!",
-      description: `Ocorreu algum problema interno ao editar o aluno(a).`,
+      title: "❌ Erro!",
+      description: `Ocorreu algum problema interno ao editar o aluno.`,
       duration: 5000,
       variant: "destructive",
       })
@@ -175,7 +186,7 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("students", JSON.stringify(newList));
 
     toast({
-      title: "Sucesso!",
+      title: "✅ Sucesso!",
       description: `Aluno(a) ${saved.name} editado com sucesso.`,
       duration: 5000,
       variant: "default",
