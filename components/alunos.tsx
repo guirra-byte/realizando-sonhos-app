@@ -86,8 +86,7 @@ type UserProps = {
   user?: User;
 };
 export default function AlunosPage({ user }: UserProps) {
-  const { students, updateStudent } = useCadastro();
-
+  const { students, updateStudent, deleteStudent } = useCadastro();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchGuardian, setSearchGuardian] = useState("");
   const [searchShift, setSearchShift] = useState("both");
@@ -110,10 +109,17 @@ export default function AlunosPage({ user }: UserProps) {
   const [editStudentData, setEditStudentData] = useState<Student | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [formData, setFormData] = useState<Partial<Student> | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
 
   function openEditModal(student: Student) {
     setEditStudentData(student);
     setIsEditModalOpen(true);
+  }
+
+  function openDeleteModal(student: Student) {
+    setEditStudentData(student);
+    setIsDeleteModalOpen(true);
   }
 
   useEffect(() => {
@@ -885,7 +891,7 @@ export default function AlunosPage({ user }: UserProps) {
                             displayFormat={{ hour24: "dd/MM/yyyy" }}
                             value={formData?.birthDate ? parse(formData.birthDate, 'dd/MM/yyyy', new Date()) : undefined}
                             onChange={(date) => {
-                              if(!date) return; 
+                              if (!date) return;
                               setFormData(prev => ({ ...prev!, birthDate: date.toLocaleDateString("pt-BR") }))
                             }}
                           />
@@ -955,6 +961,50 @@ export default function AlunosPage({ user }: UserProps) {
                   </AlertDialogContent>
 
                 </AlertDialog>
+
+                <AlertDialog
+                  open={isDeleteModalOpen}
+                  onOpenChange={setIsDeleteModalOpen}
+                >
+                  <AlertDialogContent className="max-w-md sm:max-w-lg">
+                    <AlertDialogHeader>
+                      <div className="flex flex-col items-center sm:items-start">
+                        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                          <OctagonAlert className="h-6 w-6 text-red-600 dark:text-red-400" />
+                        </div>
+                        <AlertDialogTitle className="text-center sm:text-left text-lg font-semibold">
+                          Excluir aluno do sistema
+                        </AlertDialogTitle>
+                      </div>
+                    </AlertDialogHeader>
+
+                    <Separator className="border-t border-dashed" />
+                    <div className="space-y-3">
+                      <AlertDialogDescription className="text-md text-black">
+                        Esta ação é <strong>irreversível</strong>, deseja mesmo deletar este aluno?
+                      </AlertDialogDescription>
+                    </div>
+
+                    <AlertDialogFooter>
+                      <AlertDialogAction
+                        onClick={() => setIsDeleteModalOpen(false)}
+                      >
+                        Fechar
+                      </AlertDialogAction>
+                      <AlertDialogAction
+                        onClick={async () => {
+                          if (studentToDelete?.id != null) {
+                            await deleteStudent(studentToDelete.id);
+                          }
+                          setIsDeleteModalOpen(false);
+                        }}>
+                        Deletar aluno
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+
+                </AlertDialog>
+
 
                 {/* Students Data Table */}
                 <Table className="text-sm [&_td]:py-2 [&_th]:py-1">
@@ -1044,8 +1094,10 @@ export default function AlunosPage({ user }: UserProps) {
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                  onClick={handleSelectStudent(student)}
-                                >
+                                  onClick={() => {
+                                    openDeleteModal(student)
+                                    setStudentToDelete(student)
+                                  }}>
                                   Excluir Aluno
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
