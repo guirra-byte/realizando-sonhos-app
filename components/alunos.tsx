@@ -872,6 +872,7 @@ export default function AlunosPage({ user }: UserProps) {
                         <div className="grid grid-cols-2 gap-2">
                           <p className="font-medium">Nome:</p>
                           <Input
+                            required
                             value={formData?.name ?? ""}
                             onChange={e =>
                               setFormData(prev => ({ ...prev, name: e.target.value }))}
@@ -891,6 +892,7 @@ export default function AlunosPage({ user }: UserProps) {
 
                           <p className="font-medium">Responsável:</p>
                           <Input
+                            required
                             value={formData?.guardian ?? ""}
                             onChange={e =>
                               setFormData(prev => ({ ...prev, guardian: e.target.value }))}
@@ -898,6 +900,9 @@ export default function AlunosPage({ user }: UserProps) {
 
                           <p className="font-medium">Contato:</p>
                           <Input
+                            placeholder="(00) 00000-0000"
+                            maxLength={15}
+                            required
                             value={formData?.guardianPhoneNumber ?? ""}
                             onChange={e =>
                               setFormData(prev => ({ ...prev, guardianPhoneNumber: e.target.value }))}
@@ -905,6 +910,9 @@ export default function AlunosPage({ user }: UserProps) {
 
                           <p className="font-medium">CPF do Responsável:</p>
                           <Input
+                            placeholder="000.000.000-00"
+                            maxLength={14}
+                            required
                             value={formData?.guardianCPF ?? ""}
                             onChange={e =>
                               setFormData(prev => ({ ...prev, guardianCPF: e.target.value }))}
