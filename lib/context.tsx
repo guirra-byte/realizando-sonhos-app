@@ -57,6 +57,7 @@ type CadastroContextType = {
   students: Student[];
   addStudent: (student: Student) => void;
   updateStudent: (student: Partial<Student>) => Promise<void>;
+  deleteStudent: (studentId: number) => Promise<void>;
 };
 
 // Criando o contexto
@@ -188,9 +189,38 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  async function deleteStudent(id: number) {
+    const response = await fetch("/api/alunos", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+    if (!response.ok) {
+      toast({
+      title: "❌ Erro!",
+      description: `Ocorreu algum problema interno ao deletar o aluno.`,
+      duration: 7000,
+      variant: "destructive",
+      })
+      
+      return
+    };
+
+    (await response.json()) as Student;
+    localStorage.removeItem("students");
+
+    toast({
+      title: "✅ Sucesso!",
+      description: "Aluno deletado com sucesso, recarregue a página para aplicar as alterações.",
+      duration: 7000,
+      variant: "default",
+      className: "bg-green-600 text-white",
+    });
+}
+
   return (
     <CadastroContext.Provider
-      value={{ students, addStudent, updateStudent }}
+      value={{ students, addStudent, updateStudent, deleteStudent }}
     >
       {children}
     </CadastroContext.Provider>
