@@ -46,16 +46,35 @@ export async function PUT(request: Request) {
       where: { id },
       data: rest,
     })
-    return new Response(JSON.stringify(updatedStudent), 
-    {
-      status: 200,
-      headers: { "Content-Type": "application/json" }
-    }
-  );
+    return new Response(JSON.stringify(updatedStudent),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      }
+    );
   } catch (error) {
     return new Response(
       JSON.stringify({ message: "Erro ao editar aluno", error: String(error) }),
       { status: 500 }
     );
-    }
   }
+}
+
+export async function DELETE(request: Request) {
+  const data = await request.json();
+  const { id } = data
+  try {
+    await prismaClient.student.delete({
+      where: { id },
+    })
+    return new Response(JSON.stringify({
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    }))
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ message: "Erro ao excluir aluno", error: String(error) }),
+      { status: 500 }
+    )
+  }
+}
