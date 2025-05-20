@@ -5,6 +5,7 @@ import { toast } from "@/components/ui/use-toast";
 import { formatCPF, formatName } from "@/utils/format-fns";
 import { getSchoolYear } from "@/utils/get-school-year";
 import { getShift } from "@/utils/get-shift";
+import { validateStudent } from "@/utils/validators";
 import { Class as DbClass } from "@prisma/client";
 import { parse } from "date-fns/parse";
 import { Router } from "next/router";
@@ -153,15 +154,8 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
 
   async function updateStudent(updatedStudent: Partial<Student>) {
     
-    if(!updatedStudent.name?.includes(" ") || updatedStudent.name.length < 3) {
-      toast({
-      title: "Erro!",
-      description: `O nome do aluno está incompleto.`,
-      duration: 5000,
-      variant: "destructive",
-      })
-      return
-  }
+    if(!validateStudent(updatedStudent)) return
+
     const response = await fetch("/api/alunos", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -172,7 +166,7 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
       toast({
       title: "❌ Erro!",
       description: `Ocorreu algum problema interno ao editar o aluno.`,
-      duration: 5000,
+      duration: 7000,
       variant: "destructive",
       })
       
@@ -188,7 +182,7 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     toast({
       title: "✅ Sucesso!",
       description: `Aluno(a) ${saved.name} editado com sucesso.`,
-      duration: 5000,
+      duration: 7000,
       variant: "default",
       className: "bg-green-600 text-white",
     });
