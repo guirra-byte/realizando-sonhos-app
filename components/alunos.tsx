@@ -69,6 +69,7 @@ import { getSchoolYear } from "@/utils/get-school-year";
 import { DateTimePicker } from "./ui/datetime-picker";
 import { ptBR } from "date-fns/locale";
 import { generateReport } from "@/lib/filters-report";
+import { formatCPF, handlePhoneChange } from "@/utils/masks";
 
 const shiftSelectAssign: Record<string, string> = {
   morning: "MANHÃ",
@@ -128,7 +129,7 @@ export default function AlunosPage({ user }: UserProps) {
     }
   }, [editStudentData])
 
-  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>, p0: (masked: any) => void) => {
     const value = e.target.value.replace(/\D/g, "");
     const masked = value
       .replace(/(\d{3})(\d)/, "$1.$2")
@@ -692,7 +693,7 @@ export default function AlunosPage({ user }: UserProps) {
                       maxLength={14}
                       required
                       value={searchGuardianCPF}
-                      onChange={handleCpfChange}
+                      onChange={(e) => handleCpfChange(e, (masked) => setFormData(prev => ({ ...prev, guardianCPF: masked })))}
                       className="flex-1"
                     />
 
@@ -910,8 +911,7 @@ export default function AlunosPage({ user }: UserProps) {
                             maxLength={15}
                             required
                             value={formData?.guardianPhoneNumber ?? ""}
-                            onChange={e =>
-                              setFormData(prev => ({ ...prev, guardianPhoneNumber: e.target.value }))}
+                            onChange={(e) => handlePhoneChange(e, (masked) => setFormData((prev) => ({ ...prev!, guardianPhoneNumber: masked })))}
                           />
 
                           <p className="font-medium">CPF do Responsável:</p>
@@ -920,8 +920,7 @@ export default function AlunosPage({ user }: UserProps) {
                             maxLength={14}
                             required
                             value={formData?.guardianCPF ?? ""}
-                            onChange={e =>
-                              setFormData(prev => ({ ...prev, guardianCPF: e.target.value }))}
+                            onChange={(e) => setFormData((prev) => ({...prev!, guardianCPF: formatCPF(e.target.value),}))}
                           />
                         </div>
 
