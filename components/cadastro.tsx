@@ -34,6 +34,7 @@ import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { CurrencyInput } from "@/utils/currency-input";
 import { DateTimePicker } from "./ui/datetime-picker";
+import { handleCpfChange, handlePhoneChange } from "@/utils/masks";
 
 export type ContratoProps = {
   value: string;
@@ -83,35 +84,6 @@ export default function Cadastro() {
 
   // Contexto
   const { students, addStudent } = useCadastro();
-
-  // Máscara de CPF
-  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    const masked = value
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-
-    setStudent((prev) => ({ ...prev, guardianCPF: masked }));
-  };
-
-  // Máscara de telefone
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    let masked = value;
-
-    if (value.length <= 10) {
-      masked = value
-        .replace(/^(\d{2})(\d)/g, "($1) $2")
-        .replace(/(\d{4})(\d{4})$/, "$1-$2");
-    } else {
-      masked = value
-        .replace(/^(\d{2})(\d)/g, "($1) $2")
-        .replace(/(\d{5})(\d{4})$/, "$1-$2");
-    }
-
-    setStudent((prev) => ({ ...prev, guardianPhoneNumber: masked }));
-  };
 
   // Atualizar lista de turmas únicas
   useEffect(() => {
@@ -443,7 +415,7 @@ export default function Cadastro() {
                           maxLength={14}
                           required
                           value={student.guardianCPF}
-                          onChange={handleCpfChange}
+                          onChange={(e) => handleCpfChange(e, (masked) => setStudent(prev => ({ ...prev, guardianCPF: masked })))}
                         />
                       </div>
 
@@ -458,7 +430,7 @@ export default function Cadastro() {
                           required
                           type="tel"
                           value={student.guardianPhoneNumber}
-                          onChange={handlePhoneChange}
+                          onChange={(e) => handlePhoneChange(e, (masked) => setStudent(prev => ({ ...prev, guardianPhoneNumber: masked})))}
                         />
                       </div>
                     </div>
