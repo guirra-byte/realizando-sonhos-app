@@ -279,10 +279,10 @@ export default function Cadastro() {
     const { name, guardian, guardianCPF, schoolYear, shift } =
       student;
 
-    const camposObrigatoriosPreenchidos =
+    const settedMandatoryFields =
       name && guardian && guardianCPF && schoolYear && shift;
 
-    if (!camposObrigatoriosPreenchidos) {
+    if (!settedMandatoryFields) {
       toast({
         title: "Erro",
         description: "Preencha todos os campos obrigatórios",
