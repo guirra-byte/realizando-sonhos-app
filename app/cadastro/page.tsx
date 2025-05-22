@@ -1,4 +1,4 @@
-import { allowedEmails } from "@/can-access";
+import { allowedEmails } from "@/utils/can-access";
 import Cadastro from "@/components/cadastro";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
