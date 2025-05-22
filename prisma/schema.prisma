@@ -27,11 +27,23 @@ model Student {
   @@map("students")
 }
 
+model AllowedUsers {
+  id        String @id @default(uuid())
+  name      String
+  email     String @unique
+  invitedBy String @map("invited_by")
+
+  createdAt   DateTime  @default(now()) @map("created_at")
+  lastLoginAt DateTime? @map("last_login_at")
+
+  @@map("allowed_users")
+}
+
 model Class {
   id          String  @id @default(uuid())
-  name        String
-  minAge      Int
-  maxAge      Int
+  name        String  @unique
+  minAge      Int?
+  maxAge      Int?
   description String?
 
   students         Student[]

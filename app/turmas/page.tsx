@@ -1,4 +1,4 @@
-import { allowedEmails } from "@/can-access";
+import { allowedEmails } from "@/utils/can-access";
 import ClassManagement from "@/components/turmas/class-management";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
