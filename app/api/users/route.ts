@@ -11,7 +11,7 @@ export interface AllowedUserDTO {
   id: string;
   name: string;
   email: string;
-  invitedBy: string
+  invitedBy: string;
   createdAt: Date;
   lastLoginAt: Date | null;
 }
@@ -19,9 +19,10 @@ export interface AllowedUserDTO {
 export async function GET(request: Request) {
   const data = (await request.json()) as { email: string };
   try {
-    const allowedUser: AllowedUserDTO | null = await prismaClient.allowedUsers.findUnique({
-      where: { email: data.email },
-    });
+    const allowedUser: AllowedUserDTO | null =
+      await prismaClient.allowedUsers.findUnique({
+        where: { email: data.email },
+      });
 
     if (!allowedUser) {
       return new Response(
