@@ -60,7 +60,7 @@ import {
 } from "./ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { User } from "next-auth";
-import { isAfter, isBefore, isEqual, isSameMonth, parseISO } from "date-fns";
+import { isAfter, isBefore, isEqual, isSameMonth, parseISO, parse } from "date-fns";
 import { Checkbox } from "./ui/checkbox";
 import { ConfettiFall } from "./confetti-memo";
 import { Label } from "./ui/label";
@@ -69,6 +69,7 @@ import { getSchoolYear } from "@/utils/get-school-year";
 import { DateTimePicker } from "./ui/datetime-picker";
 import { ptBR } from "date-fns/locale";
 import { generateReport } from "@/lib/filters-report";
+import { formatCPF, handlePhoneChange } from "@/utils/masks";
 
 const shiftSelectAssign: Record<string, string> = {
   morning: "MANHÃ",
@@ -86,8 +87,7 @@ type UserProps = {
   user?: User;
 };
 export default function AlunosPage({ user }: UserProps) {
-  const { students } = useCadastro();
-
+  const { students, updateStudent, deleteStudent } = useCadastro();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchGuardian, setSearchGuardian] = useState("");
   const [searchShift, setSearchShift] = useState("both");
@@ -107,8 +107,29 @@ export default function AlunosPage({ user }: UserProps) {
   const [isInfosModalOpen, setIsInfosModalOpen] = useState(false);
   const [infosModalData, setInfosModalData] = useState<Student>();
   const [disabledClearFilters, setDisabledClearFilters] = useState(true);
+  const [editStudentData, setEditStudentData] = useState<Student | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [formData, setFormData] = useState<Partial<Student> | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
 
-  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function openEditModal(student: Student) {
+    setEditStudentData(student);
+    setIsEditModalOpen(true);
+  }
+
+  function openDeleteModal(student: Student) {
+    setEditStudentData(student);
+    setIsDeleteModalOpen(true);
+  }
+
+  useEffect(() => {
+    if (editStudentData != null) {
+      setFormData(editStudentData)
+    }
+  }, [editStudentData])
+
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>, p0: (masked: any) => void) => {
     const value = e.target.value.replace(/\D/g, "");
     const masked = value
       .replace(/(\d{3})(\d)/, "$1.$2")
@@ -672,7 +693,7 @@ export default function AlunosPage({ user }: UserProps) {
                       maxLength={14}
                       required
                       value={searchGuardianCPF}
-                      onChange={handleCpfChange}
+                      onChange={(e) => handleCpfChange(e, (masked) => setFormData(prev => ({ ...prev, guardianCPF: masked })))}
                       className="flex-1"
                     />
 
@@ -831,6 +852,159 @@ export default function AlunosPage({ user }: UserProps) {
                   </AlertDialogContent>
                 </AlertDialog>
 
+                <AlertDialog
+                  open={isEditModalOpen}
+                  onOpenChange={setIsEditModalOpen}
+                >
+                  <AlertDialogContent className="max-w-md sm:max-w-lg">
+                    <AlertDialogHeader>
+                      <div className="flex flex-col items-center sm:items-start">
+                        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                          <OctagonAlert className="h-6 w-6 text-red-600 dark:text-red-400" />
+                        </div>
+                        <AlertDialogTitle className="text-center sm:text-left text-lg font-semibold">
+                          Editar Informações do Aluno
+                        </AlertDialogTitle>
+                      </div>
+                    </AlertDialogHeader>
+
+                    <AlertDialogDescription>
+                      Edite os dados do aluno e clique em “Salvar” para confirmar.
+                    </AlertDialogDescription>
+
+                    <Separator className="border-t border-dashed" />
+
+                    {formData ? (
+                      <div className="space-y-3 text-sm">
+                        <div className="grid grid-cols-2 gap-2">
+                          <p className="font-medium">Nome:</p>
+                          <Input
+                            required
+                            value={formData?.name ?? ""}
+                            onChange={e =>
+                              setFormData(prev => ({ ...prev, name: e.target.value }))}
+                          />
+
+                          <p className="font-medium">Data de Nascimento:</p>
+                          <DateTimePicker
+                            granularity="day"
+                            locale={ptBR}
+                            displayFormat={{ hour24: "dd/MM/yyyy" }}
+                            value={formData?.birthDate ? parse(formData.birthDate, 'dd/MM/yyyy', new Date()) : undefined}
+                            onChange={(date) => {
+                              if (!date) return;
+                              setFormData(prev => ({ ...prev!, birthDate: date.toLocaleDateString("pt-BR") }))
+                            }}
+                          />
+
+                          <p className="font-medium">Responsável:</p>
+                          <Input
+                            required
+                            value={formData?.guardian ?? ""}
+                            onChange={e =>
+                              setFormData(prev => ({ ...prev, guardian: e.target.value }))}
+                          />
+
+                          <p className="font-medium">Contato:</p>
+                          <Input
+                            placeholder="(00) 00000-0000"
+                            maxLength={15}
+                            required
+                            value={formData?.guardianPhoneNumber ?? ""}
+                            onChange={(e) => handlePhoneChange(e, (masked) => setFormData((prev) => ({ ...prev!, guardianPhoneNumber: masked })))}
+                          />
+
+                          <p className="font-medium">CPF do Responsável:</p>
+                          <Input
+                            placeholder="000.000.000-00"
+                            maxLength={14}
+                            required
+                            value={formData?.guardianCPF ?? ""}
+                            onChange={(e) => setFormData((prev) => ({...prev!, guardianCPF: formatCPF(e.target.value),}))}
+                          />
+                        </div>
+
+                        <Separator className="border-t border-dashed" />
+
+                        <div>
+                          <p className="font-medium">Informações adicionais:</p>
+                          <Input
+                            value={formData?.additionalInfos ?? ""}
+                            onChange={e =>
+                              setFormData(prev => ({ ...prev, additionalInfos: e.target.value }))}
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground text-center">
+                        Nenhum estudante selecionado.
+                      </p>
+                    )}
+
+                    <AlertDialogFooter>
+                      <AlertDialogAction
+                        onClick={() => setIsEditModalOpen(false)}
+                      >
+                        Fechar
+                      </AlertDialogAction>
+                      <AlertDialogAction
+                        onClick={async () => {
+                          if (!formData) return;
+                          await updateStudent(formData!);
+                          setIsEditModalOpen(false);
+                        }}
+                      >
+                        Salvar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+
+                </AlertDialog>
+
+                <AlertDialog
+                  open={isDeleteModalOpen}
+                  onOpenChange={setIsDeleteModalOpen}
+                >
+                  <AlertDialogContent className="max-w-md sm:max-w-lg">
+                    <AlertDialogHeader>
+                      <div className="flex flex-col items-center sm:items-start">
+                        <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                          <OctagonAlert className="h-6 w-6 text-red-600 dark:text-red-400" />
+                        </div>
+                        <AlertDialogTitle className="text-center sm:text-left text-lg font-semibold">
+                          Excluir aluno do sistema
+                        </AlertDialogTitle>
+                      </div>
+                    </AlertDialogHeader>
+
+                    <Separator className="border-t border-dashed" />
+                    <div className="space-y-3">
+                      <AlertDialogDescription className="text-md text-black">
+                        Esta ação é <strong>irreversível</strong>, deseja mesmo deletar este aluno?
+                      </AlertDialogDescription>
+                    </div>
+
+                    <AlertDialogFooter>
+                      <AlertDialogAction
+                        onClick={() => setIsDeleteModalOpen(false)}
+                      >
+                        Fechar
+                      </AlertDialogAction>
+                      <AlertDialogAction
+                        onClick={async () => {
+                          if (studentToDelete?.id != null) {
+                            await deleteStudent(studentToDelete.id);
+                          }
+                          setIsDeleteModalOpen(false);
+                        }}>
+                        Deletar aluno
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+
+                </AlertDialog>
+
+
                 {/* Students Data Table */}
                 <Table className="text-sm [&_td]:py-2 [&_th]:py-1">
                   <TableHeader>
@@ -857,11 +1031,10 @@ export default function AlunosPage({ user }: UserProps) {
                           key={index}
                           className={`
                           h-12 transition-colors
-                          ${
-                            isChecked(student)
+                          ${isChecked(student)
                               ? "bg-primary/5 hover:bg-primary/10 transition-all"
                               : "hover:bg-muted/50"
-                          }
+                            }
                         `}
                         >
                           <TableCell className="font-medium">
@@ -914,14 +1087,16 @@ export default function AlunosPage({ user }: UserProps) {
                                   Ver detalhes
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                  onClick={handleSelectStudent(student)}
+                                  onClick={() => openEditModal(student)}
                                 >
                                   Editar Informações
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                  onClick={handleSelectStudent(student)}
-                                >
+                                  onClick={() => {
+                                    openDeleteModal(student)
+                                    setStudentToDelete(student)
+                                  }}>
                                   Excluir Aluno
                                 </DropdownMenuItem>
                               </DropdownMenuContent>

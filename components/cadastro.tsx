@@ -33,6 +33,8 @@ import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { CurrencyInput } from "@/utils/currency-input";
+import { DateTimePicker } from "./ui/datetime-picker";
+import { handleCpfChange, handlePhoneChange } from "@/utils/masks";
 
 export type ContratoProps = {
   value: string;
@@ -82,35 +84,6 @@ export default function Cadastro() {
 
   // Contexto
   const { students, addStudent } = useCadastro();
-
-  // Máscara de CPF
-  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    const masked = value
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-
-    setStudent((prev) => ({ ...prev, guardianCPF: masked }));
-  };
-
-  // Máscara de telefone
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    let masked = value;
-
-    if (value.length <= 10) {
-      masked = value
-        .replace(/^(\d{2})(\d)/g, "($1) $2")
-        .replace(/(\d{4})(\d{4})$/, "$1-$2");
-    } else {
-      masked = value
-        .replace(/^(\d{2})(\d)/g, "($1) $2")
-        .replace(/(\d{5})(\d{4})$/, "$1-$2");
-    }
-
-    setStudent((prev) => ({ ...prev, guardianPhoneNumber: masked }));
-  };
 
   // Atualizar lista de turmas únicas
   useEffect(() => {
@@ -272,13 +245,16 @@ export default function Cadastro() {
   // Envio do formulário
   const handleStudentSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const { name, birthDate, guardian, guardianCPF, schoolYear, shift } =
+
+    student.birthDate = new Intl.DateTimeFormat("pt-BR").format(birthDate)
+
+    const { name, guardian, guardianCPF, schoolYear, shift } =
       student;
 
-    const camposObrigatoriosPreenchidos =
-      name && birthDate && guardian && guardianCPF && schoolYear && shift;
+    const settedMandatoryFields =
+      name && guardian && guardianCPF && schoolYear && shift;
 
-    if (!camposObrigatoriosPreenchidos) {
+    if (!settedMandatoryFields) {
       toast({
         title: "Erro",
         description: "Preencha todos os campos obrigatórios",
@@ -401,45 +377,16 @@ export default function Cadastro() {
                         <Label htmlFor="data-nascimento">
                           Data de Nascimento*
                         </Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
+                            <DateTimePicker
                               className="w-full justify-start text-left font-normal text-muted-foreground"
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {birthDate ? (
-                                new Intl.DateTimeFormat("pt-BR").format(
-                                  birthDate
-                                )
-                              ) : (
-                                <span>Selecionar data</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
+                              displayFormat={{ hour24: "dd/MM/yyyy" }}
+                              placeholder="ex.: 20/02/2015"
+                              granularity="day"
+                              value={birthDate}
+                              onChange={setBirthDate}
                               locale={ptBR}
-                              id="data-nascimento"
-                              selected={birthDate}
-                              onSelect={(e) => {
-                                if (e) {
-                                  setBirthDate(e);
-                                  setStudent((prev) => ({
-                                    ...prev,
-                                    birthDate: new Intl.DateTimeFormat([
-                                      "ban",
-                                      "id",
-                                    ]).format(e),
-                                  }));
-                                }
-                              }}
-                              initialFocus
-                              required
+                              showOutsideDays={true}
                             />
-                          </PopoverContent>
-                        </Popover>
                       </div>
                     </div>
 
@@ -468,7 +415,7 @@ export default function Cadastro() {
                           maxLength={14}
                           required
                           value={student.guardianCPF}
-                          onChange={handleCpfChange}
+                          onChange={(e) => handleCpfChange(e, (masked) => setStudent(prev => ({ ...prev, guardianCPF: masked })))}
                         />
                       </div>
 
@@ -483,7 +430,7 @@ export default function Cadastro() {
                           required
                           type="tel"
                           value={student.guardianPhoneNumber}
-                          onChange={handlePhoneChange}
+                          onChange={(e) => handlePhoneChange(e, (masked) => setStudent(prev => ({ ...prev, guardianPhoneNumber: masked})))}
                         />
                       </div>
                     </div>
