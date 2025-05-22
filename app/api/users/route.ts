@@ -13,29 +13,7 @@ export interface AllowedUserDTO {
   email: string;
   invitedBy: string
   createdAt: Date;
-  lastLoginAt?: Date;
-}
-
-export async function POST(request: Request) {
-  const data = (await request.json()) as AllowedUserProps;
-  try {
-    await prismaClient.allowedUsers.create({ data: { ...data } });
-    return new Response(
-      JSON.stringify({ message: "Acesso concedido com sucesso!" }),
-      {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error);
-      return NextResponse.json(
-        { message: "Erro ao inserir dados", error: error.message },
-        { status: 500 }
-      );
-    }
-  }
+  lastLoginAt: Date | null;
 }
 
 export async function GET(request: Request) {
