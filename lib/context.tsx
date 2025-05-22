@@ -200,7 +200,6 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
 }
 
   return (
-    <CadastroContext.Provider value={{ students, addStudent }}>
     <CadastroContext.Provider
       value={{ students, addStudent, updateStudent, deleteStudent }}
     >
