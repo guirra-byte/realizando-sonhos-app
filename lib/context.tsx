@@ -67,21 +67,6 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchClassData = async () => {
-      try {
-        const response = await fetch("/api/turmas", { method: "GET" });
-        if (!response.ok)
-          throw new Error(`Error fetching data: ${response.status}`);
-
-        const loadData = (await response.json()) as DbClass[];
-        if (isMounted) {
-          localStorage.setItem("classes", JSON.stringify(loadData));
-          setClasses(loadData);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
     const fetchStudentsData = async () => {
       try {
         const response = await fetch("/api/alunos", { method: "GET" });
@@ -101,10 +86,6 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     const storageStudents = localStorage.getItem("students");
     if (!storageStudents) fetchStudentsData();
     else setStudents(JSON.parse(storageStudents) as Student[]);
-
-    const storageClasses = localStorage.getItem("classes");
-    if (!storageClasses) fetchClassData();
-    else setClasses(JSON.parse(storageClasses) as DbClass[]);
 
     return () => {
       isMounted = false;
@@ -140,9 +121,7 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <CadastroContext.Provider
-      value={{ students, addStudent }}
-    >
+    <CadastroContext.Provider value={{ students, addStudent }}>
       {children}
     </CadastroContext.Provider>
   );
