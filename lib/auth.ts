@@ -1,4 +1,4 @@
-import { allowedEmails } from "@/can-access";
+import { allowedEmails } from "@/utils/can-access";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 
