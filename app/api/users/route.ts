@@ -13,7 +13,7 @@ export interface AllowedUserDTO {
   email: string;
   invitedBy: string
   createdAt: Date;
-  lastLoginAt: Date | null;
+  lastLoginAt: Date| null;
 }
 
 export async function GET(request: Request) {
