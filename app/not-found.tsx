@@ -9,14 +9,8 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
 
 export default async function Custom404() {
-  const session = await auth();
-  if (!session?.user) redirect("/auth/login");
-  else redirect("/alunos");
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="w-full max-w-md animate-fadeIn">
