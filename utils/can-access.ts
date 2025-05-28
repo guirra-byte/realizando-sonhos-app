@@ -7,6 +7,5 @@ export const allowedEmails = async (email: string) => {
       where: { email },
     });
 
-  console.log(allowedUser);
   return !allowedUser ? false : true;
 };
