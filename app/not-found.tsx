@@ -9,8 +9,14 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
-export default function Custom404() {
+export default async function Custom404() {
+  const session = await auth();
+  if (!session?.user) redirect("/auth/login");
+  else redirect("/alunos");
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="w-full max-w-md animate-fadeIn">
@@ -31,7 +37,8 @@ export default function Custom404() {
               Ops! Página não encontrada
             </CardTitle>
             <CardDescription className="text-gray-600">
-              Parece que você tentou acessar uma página que não existe ou foi movida.
+              Parece que você tentou acessar uma página que não existe ou foi
+              movida.
             </CardDescription>
           </CardHeader>
           <CardFooter className="pt-0">
@@ -61,7 +68,8 @@ export default function Custom404() {
         </Card>
 
         <p className="text-center text-gray-500 text-xs mt-6">
-          © {new Date().getFullYear()} Associação Realizando Sonhos. Todos os direitos reservados.
+          © {new Date().getFullYear()} Associação Realizando Sonhos. Todos os
+          direitos reservados.
         </p>
       </div>
     </main>

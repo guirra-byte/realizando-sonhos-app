@@ -3,26 +3,27 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Student {
   id                  Int     @id @default(autoincrement())
   name                String  @unique
   birthDate           String
-  additionalInfos     String?
-  schoolYear          String
+  additionalInfos     String? @map("additional_infos")
+  schoolYear          String  @map("school_year")
   shift               String
   guardian            String
-  guardianCPF         String
-  guardianPhoneNumber String
+  guardianCPF         String  @map("guardian_cpf")
+  guardianPhoneNumber String  @map("guardian_phone_number")
 
-  parents     Parent[]           @relation("ParentToStudent")
   attendances AttendanceRecord[]
 
-  class   Class?  @relation(fields: [classId], references: [id])
-  classId String?
+  class        Class?         @relation(fields: [classId], references: [id])
+  classId      Int?
+  NoticeFactor NoticeFactor[]
 
   @@map("students")
 }
@@ -40,62 +41,73 @@ model AllowedUsers {
 }
 
 model Class {
-  id          String  @id @default(uuid())
-  name        String  @unique
-  minAge      Int?
-  maxAge      Int?
-  description String?
+  id   Int    @id @default(autoincrement())
+  name String @unique
 
   students         Student[]
   AttendanceRecord AttendanceRecord[]
+  Master           Master[]
 
   @@map("class")
 }
 
-model AttendanceRecord {
-  id        String    @id
-  date      DateTime  @default(now())
-  arrived   Boolean   @default(false)
-  arrivedAt DateTime?
+model NoticeFactor {
+  id          String     @id @default(uuid())
+  at          DateTime   @default(now())
+  type        FactorType @default(POSITIVE)
+  description String
 
-  Class     Class?   @relation(fields: [classId], references: [id])
-  classId   String?
+  from   Int
+  Master Master @relation(fields: [from], references: [id])
+
+  to      Int
+  Student Student @relation(fields: [to], references: [id])
+
+  AttendanceRecord   AttendanceRecord? @relation(fields: [attendanceRecordId], references: [id])
+  attendanceRecordId String?           @map("attendance_record_id")
+
+  @@map("notice_factors")
+}
+
+model Master {
+  id          Int          @id @default(autoincrement())
+  name        String
+  email       String       @unique
+  status      MasterStatus @default(ACTIVE)
+  phoneNumber String       @unique @map("phone_number")
+
+  Class   Class @relation(fields: [myClass], references: [id])
+  myClass Int   @map("my_class")
+
+  attendanceRecords AttendanceRecord[]
+  noticeFactor      NoticeFactor[]
+}
+
+model AttendanceRecord {
+  id      String   @id
+  date    DateTime @default(now())
+  present Boolean  @default(false)
+
+  noticeFactors NoticeFactor[]
+
+  Master   Master @relation(fields: [masterId], references: [id])
+  masterId Int
+
+  Class   Class? @relation(fields: [classId], references: [id])
+  classId Int?
+
   Student   Student? @relation(fields: [studentId], references: [id])
   studentId Int?
 
-  @@map("attendance_record")
+  @@map("attendance_records")
 }
 
-model Parent {
-  id          String     @id
-  phoneNumber String
-  type        ParentType
-  isGuardian  Boolean    @default(false)
-  guardianCPF String
-  name        String     @unique
-
-  Payment  Payment[]
-  children Student[] @relation("ParentToStudent")
-
-  @@map("parents")
+enum FactorType {
+  POSITIVE
+  NEGATIVE
 }
 
-model Payment {
-  id        String        @id
-  amount    Int
-  monthTag  String
-  status    PaymentStatus @default(UNPAID)
-  ownerId   String
-  studentId String
-  owner     Parent        @relation(fields: [ownerId], references: [id])
-}
-
-enum PaymentStatus {
-  PAID
-  UNPAID
-}
-
-enum ParentType {
-  MOTHER
-  FATHER
+enum MasterStatus {
+  ACTIVE
+  UNACTIVE
 }

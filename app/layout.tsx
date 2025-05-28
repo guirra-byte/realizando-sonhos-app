@@ -1,12 +1,11 @@
 import type React from "react";
-import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { CadastroProvider } from "@/lib/context";
+import { Poppins } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
-import { Sidebar } from "@/components/sidebar";
-const inter = Poppins({ weight: ["400", "600", "800"], subsets: ["latin"] });
+const font = Poppins({ weight: ["400", "600", "800"], subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -15,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
+      <body className={font.className}>
         <CadastroProvider>
           {children}
           <Toaster />
