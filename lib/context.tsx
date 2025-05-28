@@ -1,6 +1,5 @@
 "use client";
 
-import { Class } from "@/components/turmas/class-management";
 import { toast } from "@/components/ui/use-toast";
 import { formatCPF, formatName } from "@/utils/format-fns";
 import { getSchoolYear } from "@/utils/get-school-year";
@@ -8,7 +7,7 @@ import { getShift } from "@/utils/get-shift";
 import { validateStudent } from "@/utils/validators";
 import { Class as DbClass } from "@prisma/client";
 import { parse } from "date-fns/parse";
-import { Router } from "next/router";
+
 import {
   createContext,
   useContext,
@@ -32,7 +31,7 @@ export type ClassData = {
 };
 
 export type Student = {
-  id?: number,
+  id?: number;
   name: string;
   birthDate: string;
   additionalInfos?: string;
@@ -135,8 +134,7 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
   };
 
   async function updateStudent(updatedStudent: Partial<Student>) {
-    
-    if(!validateStudent(updatedStudent)) return
+    if (!validateStudent(updatedStudent)) return;
 
     const response = await fetch("/api/alunos", {
       method: "PUT",
@@ -146,16 +144,16 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
 
     if (!response.ok) {
       toast({
-      title: "❌ Erro!",
-      description: `Ocorreu algum problema interno ao editar o aluno.`,
-      duration: 7000,
-      variant: "destructive",
-      })
-      
-      return
-    };
+        title: "❌ Erro!",
+        description: `Ocorreu algum problema interno ao editar o aluno.`,
+        duration: 7000,
+        variant: "destructive",
+      });
+
+      return;
+    }
     const saved = (await response.json()) as Student;
-    const newList = students.map(s =>
+    const newList = students.map((s) =>
       s.guardianCPF === saved.guardianCPF ? saved : s
     );
     setStudents(newList);
@@ -175,29 +173,30 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
-    })
+    });
     if (!response.ok) {
       toast({
-      title: "❌ Erro!",
-      description: `Ocorreu algum problema interno ao deletar o aluno.`,
-      duration: 7000,
-      variant: "destructive",
-      })
-      
-      return
-    };
+        title: "❌ Erro!",
+        description: `Ocorreu algum problema interno ao deletar o aluno.`,
+        duration: 7000,
+        variant: "destructive",
+      });
+
+      return;
+    }
 
     (await response.json()) as Student;
     localStorage.removeItem("students");
 
     toast({
       title: "✅ Sucesso!",
-      description: "Aluno deletado com sucesso, recarregue a página para aplicar as alterações.",
+      description:
+        "Aluno deletado com sucesso, recarregue a página para aplicar as alterações.",
       duration: 7000,
       variant: "default",
       className: "bg-green-600 text-white",
     });
-}
+  }
 
   return (
     <CadastroContext.Provider
@@ -214,5 +213,6 @@ export function useCadastro() {
   if (context === undefined) {
     throw new Error("useCadastro deve ser usado dentro de um CadastroProvider");
   }
+
   return context;
 }

@@ -2,6 +2,7 @@ import AlunosPage from "@/components/alunos";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { allowedEmails } from "@/utils/can-access";
+
 export default async function Alunos() {
   const session = await auth();
   if (session) {
