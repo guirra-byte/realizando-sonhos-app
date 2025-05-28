@@ -5,35 +5,32 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  directUrl = env("DIRECT_URL")
 }
 
 model Student {
-  id                  Int     @id @default(autoincrement())
-  name                String  @unique
+  id                  Int                @id @default(autoincrement())
+  name                String             @unique
   birthDate           String
-  additionalInfos     String? @map("additional_infos")
-  schoolYear          String  @map("school_year")
+  additionalInfos     String?            @map("additional_infos")
+  schoolYear          String             @map("school_year")
   shift               String
   guardian            String
-  guardianCPF         String  @map("guardian_cpf")
-  guardianPhoneNumber String  @map("guardian_phone_number")
-
-  attendances AttendanceRecord[]
-
-  class        Class?         @relation(fields: [classId], references: [id])
-  classId      Int?
-  NoticeFactor NoticeFactor[]
+  guardianCPF         String             @map("guardian_cpf")
+  guardianPhoneNumber String             @map("guardian_phone_number")
+  classId             Int?
+  attendances         AttendanceRecord[]
+  NoticeFactor        NoticeFactor[]
+  class               Class?             @relation(fields: [classId], references: [id])
 
   @@map("students")
 }
 
 model AllowedUsers {
-  id        String @id @default(uuid())
-  name      String
-  email     String @unique
-  invitedBy String @map("invited_by")
-
+  id          String    @id @default(uuid())
+  name        String
+  email       String    @unique
+  invitedBy   String    @map("invited_by")
   createdAt   DateTime  @default(now()) @map("created_at")
   lastLoginAt DateTime? @map("last_login_at")
 
@@ -41,63 +38,53 @@ model AllowedUsers {
 }
 
 model Class {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  students         Student[]
-  AttendanceRecord AttendanceRecord[]
+  id               Int                @id @default(autoincrement())
+  name             String             @unique
   Master           Master[]
+  AttendanceRecord AttendanceRecord[]
+  students         Student[]
 
   @@map("class")
 }
 
 model NoticeFactor {
-  id          String     @id @default(uuid())
-  at          DateTime   @default(now())
-  type        FactorType @default(POSITIVE)
-  description String
-
-  from   Int
-  Master Master @relation(fields: [from], references: [id])
-
-  to      Int
-  Student Student @relation(fields: [to], references: [id])
-
-  AttendanceRecord   AttendanceRecord? @relation(fields: [attendanceRecordId], references: [id])
+  id                 String            @id @default(uuid())
+  at                 DateTime          @default(now())
+  type               FactorType        @default(POSITIVE)
+  description        String
+  from               Int
+  to                 Int
   attendanceRecordId String?           @map("attendance_record_id")
+  AttendanceRecord   AttendanceRecord? @relation(fields: [attendanceRecordId], references: [id])
+  Master             Master            @relation(fields: [from], references: [id])
+  Student            Student           @relation(fields: [to], references: [id])
 
   @@map("notice_factors")
 }
 
 model Master {
-  id          Int          @id @default(autoincrement())
-  name        String
-  email       String       @unique
-  status      MasterStatus @default(ACTIVE)
-  phoneNumber String       @unique @map("phone_number")
-
-  Class   Class @relation(fields: [myClass], references: [id])
-  myClass Int   @map("my_class")
-
+  id                Int                @id @default(autoincrement())
+  name              String
+  email             String             @unique
+  status            MasterStatus       @default(ACTIVE)
+  phoneNumber       String             @unique @map("phone_number")
+  myClass           Int                @map("my_class")
+  Class             Class              @relation(fields: [myClass], references: [id])
   attendanceRecords AttendanceRecord[]
   noticeFactor      NoticeFactor[]
 }
 
 model AttendanceRecord {
-  id      String   @id
-  date    DateTime @default(now())
-  present Boolean  @default(false)
-
+  id            String         @id
+  date          DateTime       @default(now())
+  present       Boolean        @default(false)
+  masterId      Int
+  classId       Int?
+  studentId     Int?
+  Class         Class?         @relation(fields: [classId], references: [id])
+  Master        Master         @relation(fields: [masterId], references: [id])
+  Student       Student?       @relation(fields: [studentId], references: [id])
   noticeFactors NoticeFactor[]
-
-  Master   Master @relation(fields: [masterId], references: [id])
-  masterId Int
-
-  Class   Class? @relation(fields: [classId], references: [id])
-  classId Int?
-
-  Student   Student? @relation(fields: [studentId], references: [id])
-  studentId Int?
 
   @@map("attendance_records")
 }
