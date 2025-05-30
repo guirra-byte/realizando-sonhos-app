@@ -519,7 +519,7 @@ export default function Cadastro() {
                     <Button
                       variant="outline"
                       type="button"
-                      onClick={() => router.push("/")}
+                      onClick={() => router.push("/alunos")}
                       className="py-2 px-4 rounded-lg"
                     >
                       Cancelar
