@@ -90,8 +90,13 @@ export function CadastroProvider({ children }: { children: ReactNode }) {
     };
 
     const storageStudents = localStorage.getItem("students");
+
     if (!storageStudents) fetchStudentsData();
-    else setStudents(JSON.parse(storageStudents) as Student[]);
+    if (storageStudents) {
+      const assertParse = JSON.parse(storageStudents) as Student[];
+      if (assertParse.length === 0) fetchStudentsData();
+      else setStudents(JSON.parse(storageStudents) as Student[]);
+    }
 
     return () => {
       isMounted = false;
