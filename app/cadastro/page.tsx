@@ -7,7 +7,7 @@ export default async function CadastroPage() {
   const session = await auth();
   if (session) {
     if (!session.user || !session.user.email) redirect("/unauthorized");
-    const entireUserCanAccess = allowedEmails(session.user.email);
+    const entireUserCanAccess = await allowedEmails(session.user.email);
     if (!entireUserCanAccess) {
       redirect("/unauthorized");
     }
