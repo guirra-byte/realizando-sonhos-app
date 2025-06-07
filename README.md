@@ -143,12 +143,16 @@ npm run dev
 Um projeto social dedicado a transformar a vida de crianças e adolescentes por meio da educação e acolhimento.  
 Seu código fará parte de uma ferramenta usada por educadores voluntários no dia a dia.
 
-## 🤝 Contribuindo
-Este é um projeto com fins sociais e educacionais. Por isso, contribuições são bem-vindas.
+## 💡 Contribuidores
 
-Entre em contato antes de contribuir
-Por favor, abra uma issue ou me envie uma mensagem explicando sua intenção de contribuir. Assim conseguimos alinhar objetivos e evitar retrabalho.
-<br>
+Aqui está a gurizada que está fazendo esse projeto acontecer! 💻✨  
+Quer entrar nessa lista também? Vai ser MÍDIA ter você com a gente!
+
+A galera que está fazendo esse projeto acontecer:
+| [![jaomarks](https://avatars.githubusercontent.com/Jaomarks?s=100&v=4)](https://github.com/Jaomarks) | [![felipethecreator](https://avatars.githubusercontent.com/felipethecreator?s=100&v=4)](https://github.com/felipethecreator) |  [![yurizzxz](https://avatars.githubusercontent.com/yurizzxz?s=100&v=4)](https://github.com/yurizzxz) |
+|:--:|:--:|:--:|
+| [jaomarks](https://github.com/Jaomarks) | [felipethecreator](https://github.com/felipethecreator) | [yurizzxz](https://github.com/yurizzxz) |
+
 
 Meu contato WhatsApp: `+55 (61) 99283-9756`
 <br>
