@@ -9,7 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Custom404() {
+export default function Custom404() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <div className="w-full max-w-md animate-fadeIn">
